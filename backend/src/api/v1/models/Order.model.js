@@ -7,7 +7,8 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING
         },
         isConfirm: {
-            type: DataTypes.BOOLEAN
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
         },
         payment: {
             type: DataTypes.STRING

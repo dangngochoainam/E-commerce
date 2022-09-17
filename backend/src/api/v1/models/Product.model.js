@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    unitPrice: {
+    price: {
       type: DataTypes.DECIMAL,
       allowNull: false,
     },
@@ -24,6 +24,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     unitOnOrder: {
         type: DataTypes.INTEGER,
+        defaultValue: 0,
     }
   });
 

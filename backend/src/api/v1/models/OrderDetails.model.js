@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             defaultValue: 1,
         },
-        unit_price: {
+        unitPrice: {
             type: DataTypes.DECIMAL,
         },
         discount: {

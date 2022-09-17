@@ -1,4 +1,5 @@
 const { Sequelize, DataTypes } = require("sequelize");
+const initData = require("./data");
 
 //Connect to the database
 const sequelize = require("../database/connect");
@@ -16,7 +17,7 @@ db.Staff = require("./Staff.model")(sequelize, DataTypes);
 db.Admin = require("./Admin.model")(sequelize, DataTypes);
 db.Seller = require("./Seller.model")(sequelize, DataTypes);
 db.Notification = require("./Notification.model")(sequelize, DataTypes);
-db.UserRole = require("./UserRole.model")(sequelize, DataTypes);
+// db.UserRole = require("./UserRole.model")(sequelize, DataTypes);
 db.Payment = require("./Payment.model")(sequelize, DataTypes);
 db.Address = require("./Address.model")(sequelize, DataTypes);
 db.Order = require("./Order.model")(sequelize, DataTypes);
@@ -60,26 +61,26 @@ db.Staff.belongsTo(db.User, {
   onDelete: "CASCADE",
 });
 
-db.Staff.hasOne(db.Admin, {
+db.User.hasOne(db.Admin, {
   foreignKey: {
     allowNull: false,
   },
   onDelete: "CASCADE",
 });
-db.Admin.belongsTo(db.Staff, {
+db.Admin.belongsTo(db.User, {
   foreignKey: {
     allowNull: false,
   },
   onDelete: "CASCADE",
 });
 
-db.Customer.hasOne(db.Seller, {
+db.User.hasOne(db.Seller, {
   foreignKey: {
     allowNull: false,
   },
   onDelete: "CASCADE",
 });
-db.Seller.belongsTo(db.Customer, {
+db.Seller.belongsTo(db.User, {
   foreignKey: {
     allowNull: false,
   },
@@ -130,8 +131,8 @@ db.Notification.belongsTo(db.User, {
   onDelete: "CASCADE",
 });
 
-db.UserRole.hasMany(db.User, { onDelete: "SET NULL" });
-db.User.belongsTo(db.UserRole, { onDelete: "SET NULL" });
+// db.UserRole.hasMany(db.User, { onDelete: "SET NULL" });
+// db.User.belongsTo(db.UserRole, { onDelete: "SET NULL" });
 
 db.User.hasMany(db.Payment, {
   foreignKey: {
@@ -265,6 +266,9 @@ db.Review.belongsTo(db.Product, {
 db.Category.hasMany(db.Product, { onDelete: "SET NULL" });
 db.Product.belongsTo(db.Category, { onDelete: "SET NULL" });
 
+db.SubCategory.hasMany(db.Product, { onDelete: "SET NULL" });
+db.Product.belongsTo(db.SubCategory, { onDelete: "SET NULL" });
+
 // Many-to-Many association
 db.Product.belongsToMany(db.Order, { through: db.OrderDetails });
 db.Order.belongsToMany(db.Product, { through: db.OrderDetails });
@@ -273,8 +277,32 @@ db.User.belongsToMany(db.HistorySearch, { through: db.UserSearch });
 db.HistorySearch.belongsToMany(db.User, { through: db.UserSearch });
 
 // Khi nào cần sửa cấu trúc dữ liệu thì sửa alter:true
-db.sequelize.sync({ alter: false }).then(() => {
-  console.log("All models were synchronized successfully.");
-});
+db.sequelize
+  .sync({ force: false })
+  .then(() => {
+    console.log("All models were synchronized successfully.");
+  })
+  // .then(() => db.Category.bulkCreate(initData.category))
+  // .then(() => db.SubCategory.bulkCreate(initData.subCategory))
+  // .then(() => db.User.bulkCreate(initData.user))
+  // .then(() => db.Customer.bulkCreate(initData.customer))
+  // .then(() => db.Seller.bulkCreate(initData.seller))
+  // .then(() => db.Shop.bulkCreate(initData.shop))
+  // .then(() => db.Promotion.bulkCreate(initData.promotion))
+  // .then(() => db.Product.bulkCreate(initData.product))
+  // .then(() => db.Address.bulkCreate(initData.address))
+  // .then(() => db.Payment.bulkCreate(initData.payment))
+  // .then(() => db.Notification.bulkCreate(initData.notification))
+  // .then(() => db.HistorySearch.bulkCreate(initData.historySearch))
+  // .then(() => db.UserSearch.bulkCreate(initData.userSearch))
+  // .then(() => db.Staff.bulkCreate(initData.staff))
+  // .then(() => db.Admin.bulkCreate(initData.admin))
+  // .then(() => db.Shipper.bulkCreate(initData.shipper))
+  // .then(() => db.Order.bulkCreate(initData.order))
+  // .then(() => db.OrderDetails.bulkCreate(initData.orderDetails))
+  // .then(() => db.Review.bulkCreate(initData.review))
+  // .then(() => db.Comment.bulkCreate(initData.comment))
+  // .then(() => db.SubComment.bulkCreate(initData.subComment));
+
 
 module.exports = db;

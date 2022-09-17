@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       point: {
         type: DataTypes.INTEGER,
+        defaultValue: 0,
       },
     },
     {

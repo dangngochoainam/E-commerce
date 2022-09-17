@@ -43,6 +43,10 @@ module.exports = (sequelize, DataTypes) => {
     address: {
       type: DataTypes.STRING,
     },
+    roles: {
+      type: DataTypes.STRING,
+      defaultValue:''
+    },
     isActive: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
