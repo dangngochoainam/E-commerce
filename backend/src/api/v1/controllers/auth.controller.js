@@ -1,7 +1,6 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { user } = require("../models/data");
-const dotenv = require("dotenv").config();
 const authService = require("../services/auth.service");
 const userService = require("../services/user.service");
 
@@ -36,14 +35,14 @@ const authController = {
   register: async (req, res) => {
     try {
       const user = req.body;
-      user.avatar = req.file.path;
+      if (req.file !== undefined) user.avatar = req.file.path;
+      console.log(req.file.path)
       const newUser = await authService.register({ user });
       const { code, data, message } = newUser;
       return res.status(code).json({ data, message });
     } catch (error) {
       console.error(error);
-      return res.status(500).json(error)
-
+      return res.status(500).json(error);
     }
   },
 

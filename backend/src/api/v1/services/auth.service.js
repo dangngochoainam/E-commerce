@@ -1,14 +1,11 @@
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
 const cloudinary = require("../../../config/cloudinary");
 const db = require("../models");
-const authController = require("../controllers/auth.controller");
 const _User = db.User;
 const _Customer = db.Customer;
 const _Seller = db.Seller;
 
 module.exports = {
-
   register: async ({ user }) => {
     const transaction = await db.sequelize.transaction();
     try {
@@ -50,16 +47,15 @@ module.exports = {
           { transaction: transaction }
         );
 
-        console.log(newUser._previousDataValues);
         if (user.roles.indexOf("CUSTOMER") !== -1) {
           const customer = await _Customer.create(
-            { userId: newUser._previousDataValues.id },
+            { userId: newUser.id },
             { transaction: transaction }
           );
         }
         if (user.roles.indexOf("SELLER") !== -1) {
           const seller = await _Seller.create(
-            { type: "Nhà bán lẻ", userId: newUser._previousDataValues.id },
+            { type: "Nhà bán lẻ", userId: newUser.id },
             { transaction: transaction }
           );
         }

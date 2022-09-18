@@ -3,6 +3,7 @@ const dotenv = require("dotenv").config();
 const db = require("../models");
 const sellerService = require("../services/seller.service");
 const shopService = require("../services/shop.service");
+const productService = require("../services/product.service");
 
 const middlewareUser = {
   verifyToken: (req, res, next) => {
@@ -36,9 +37,9 @@ const middlewareUser = {
   verifyTokenAndSeller: (req, res, next) => {
     middlewareUser.verifyToken(req, res, async () => {
       if (req.user.roles.includes("SELLER")) {
-        const seller = await sellerService.getSellerByUserId(req.user.id);
-        if (seller.data.isConfirm) {
-          req.sellerId = seller.data.id;
+        const { data } = await sellerService.getSellerByUserId(req.user.id);
+        if (data.isConfirm) {
+          req.sellerId = data.id;
           next();
         } else {
           return res.status(400).json({ error: "Seller not confirmed" });
@@ -51,21 +52,27 @@ const middlewareUser = {
     });
   },
 
-  // Xác nhận người bán chỉ được thêm sản phẩm vào shop của mình đã tạo, chứ không được thêm sản phẩm vào shop của người khác
+  // Xác nhận chỉ khi là người bán thực sự mới được CUD trên sản phẩm của shop do mình tạo ra. Không được CUD sản phẩm trên shop của người khác
   verifyTokenAndShop: (req, res, next) => {
-    middlewareUser.verifyTokenAndSeller(req, res, async() => {
-      const {shopId} = req.body; 
-      const {data} = await shopService.getShopById(shopId);
-      if(data && data.sellerId === req.sellerId){
-       next();
-      }else if(data){
-        return res.status(403).json({error: "You're not allowed add product to this shop."});
-      }
-      else{
-        return res.status(404).json({error: 'Shop not found'});
+    middlewareUser.verifyTokenAndSeller(req, res, async () => {
+      let shopId;
+      const productId = req.params.id;
+      const product = await productService.getProductById(productId);
+      if (product.data) shopId = product.data.shopId;
+      if (req.body.shopId !== undefined) shopId = req.body.shopId;
+
+      const { data } = await shopService.getShopById(shopId);
+      if (data && data.sellerId === req.sellerId) {
+        next();
+      } else if (data) {
+        return res
+          .status(403)
+          .json({ error: "You're not allowed CUD product to this shop." });
+      } else {
+        return res.status(404).json({ error: "Not found" });
       }
     });
-  }
+  },
 };
 
 module.exports = middlewareUser;
