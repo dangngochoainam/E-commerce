@@ -1,6 +1,4 @@
-const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { user } = require("../models/data");
 const authService = require("../services/auth.service");
 const userService = require("../services/user.service");
 
@@ -32,11 +30,11 @@ const authController = {
       }
     );
   },
+
   register: async (req, res) => {
     try {
       const user = req.body;
-      if (req.file !== undefined) user.avatar = req.file.path;
-      console.log(req.file.path)
+      if (req.files) user.avatar = req.files.avatar.tempFilePath;
       const newUser = await authService.register({ user });
       const { code, data, message } = newUser;
       return res.status(code).json({ data, message });
@@ -50,10 +48,7 @@ const authController = {
     try {
       const { username, password } = req.body;
 
-      const { code, message, user } = await authService.login(
-        username,
-        password
-      );
+      const { code, user } = await authService.login(username, password);
 
       const accessToken = authController.generateAccessToken(user);
       const refreshToken = authController.generateRefreshToken(user);

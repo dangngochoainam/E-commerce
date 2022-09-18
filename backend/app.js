@@ -15,7 +15,9 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(fileupload());
+app.use(fileupload({
+    useTempFiles: true
+}));
 
 app.use(morgan("common"));
 
