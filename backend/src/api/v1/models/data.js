@@ -118,7 +118,7 @@ const data = {
       lastname: "Phương",
       avatar: "",
       phone: "",
-      roles: "CUSTOMER, SELLER",
+      roles: "CUSTOMER,SELLER",
       birthday: "2001-04-28 6:00:00",
       address: "Lai Vung - Đồng Tháp",
       createdAt: "2022-09-16 18:59:59",
@@ -247,14 +247,20 @@ const data = {
       content: 'Nam Đặng đã thích sản phẩm này',
       createdAt: "2022-09-16 18:59:59",
       updatedAt: "2022-09-16 19:59:59",
-      userId: 4 //user nhận thông báo
+      type: "PRODUCT",
+      valueId: 1,
+      sourceUserId: 4, //user nhận thông báo
+      creatorId: 1
     },
     {
       id: 2,
       content: 'Duyên Đặng đã thích sản phẩm này',
       createdAt: "2022-09-16 18:59:59",
       updatedAt: "2022-09-16 19:59:59",
-      userId: 4 //user nhận thông báo
+      type: "PRODUCT",
+      valueId: 2,
+      sourceUserId: 4, //user nhận thông báo
+      creatorId: 2
     }
   ],
 
@@ -365,7 +371,7 @@ const data = {
       content: 'Sản phẩm tuyệt vời',
       createdAt: "2022-09-16 18:59:59",
       updatedAt: "2022-09-16 19:59:59",
-      customerId: 1,
+      creatorId: 2,
       productId: 1
     }, 
     {
@@ -374,7 +380,7 @@ const data = {
       content: 'Sách hay',
       createdAt: "2022-09-16 18:59:59",
       updatedAt: "2022-09-16 19:59:59",
-      customerId: 1,
+      creatorId: 4,
       productId: 2
     }
   ],
@@ -386,7 +392,7 @@ const data = {
       content: 'Sách rất hay, nên mua',
       createdAt: "2022-09-16 18:59:59",
       updatedAt: "2022-09-16 19:59:59",
-      customerId: 1,
+      creatorId: 2,
       productId: 2
     },
     {
@@ -394,7 +400,7 @@ const data = {
       content: 'Cuốn sách này đã thay đổi cuộc đời tôi',
       createdAt: "2022-09-16 18:59:59",
       updatedAt: "2022-09-16 19:59:59",
-      customerId: 2,
+      creatorId: 4,
       productId: 2
     },
   ],
@@ -405,7 +411,7 @@ const data = {
       content: 'Tôi đồng ý với ý kiến của bạn',
       createdAt: "2022-09-16 18:59:59",
       updatedAt: "2022-09-16 19:59:59",
-      customerId: 2,
+      creatorId: 4,
       commentId: 1
     }
   ]

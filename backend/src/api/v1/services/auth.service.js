@@ -2,11 +2,15 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const cloudinary = require("../../../config/cloudinary");
 const db = require("../models");
-const authController = require('../controllers/auth.controller')
+const authController = require("../controllers/auth.controller");
 const _User = db.User;
+const _Customer = db.Customer;
+const _Seller = db.Seller;
 
 module.exports = {
+
   register: async ({ user }) => {
+    const transaction = await db.sequelize.transaction();
     try {
       const checkEmail = await _User.findOne({ where: { email: user.email } });
       const checkUsername = await _User.findOne({
@@ -34,39 +38,47 @@ module.exports = {
         if (user.roles === "CUSTOMER") {
           user.roles = "CUSTOMER";
         } else if (user.roles === "SELLER") {
-          user.roles = "CUSTOMER, SELLER";
-        } else
-          return {
-            code: 400,
-            message: "Invalid role",
-          };
+          user.roles = "CUSTOMER,SELLER";
+        } else user.roles = "";
 
-        const currentUser = _User.build({
-          ...user,
-          // username: user.username,
-          password: hashed,
-          // email: user.email,
-          avatar: result.secure_url,
-        });
+        const newUser = await _User.create(
+          {
+            ...user,
+            password: hashed,
+            avatar: result.secure_url,
+          },
+          { transaction: transaction }
+        );
 
-        // Tại sao lại lỗi
-        // const newUser = await _User.create({ ...user, password: hashed});
-        // Nếu sử dụng create thì thêm thẳng các thuộc tính vào chứ không cần tạo 1 đối tượng để giữ giá trị đó
-        const newUser = await currentUser.save();
+        console.log(newUser._previousDataValues);
+        if (user.roles.indexOf("CUSTOMER") !== -1) {
+          const customer = await _Customer.create(
+            { userId: newUser._previousDataValues.id },
+            { transaction: transaction }
+          );
+        }
+        if (user.roles.indexOf("SELLER") !== -1) {
+          const seller = await _Seller.create(
+            { type: "Nhà bán lẻ", userId: newUser._previousDataValues.id },
+            { transaction: transaction }
+          );
+        }
+
+        await transaction.commit();
+
         return {
           code: 201,
-          result: newUser,
+          data: newUser,
         };
       }
     } catch (error) {
       console.log(error);
-      console.log("Error in user.servicer.js");
+      await transaction.rollback();
       return {
-        code: 404,
+        code: 500,
       };
     }
   },
-
   login: async (username, password) => {
     try {
       const user = await _User.findOne({
@@ -76,7 +88,7 @@ module.exports = {
       });
       if (!user) {
         return {
-          code: 400,
+          code: 404,
           message: "Username not found",
         };
       }
@@ -85,25 +97,23 @@ module.exports = {
 
       if (!isValidPassword) {
         return {
-          code: 400,
+          code: 404,
           message: "Password not found",
         };
       }
 
       if (user && isValidPassword) {
-
         const { password, isActive, updatedAt, ...orthers } = user.dataValues;
         return {
           code: 200,
-          user: orthers
-        }
+          user: orthers,
+        };
       }
     } catch (error) {
       console.log(error);
       return {
         code: 500,
-        message: error
-      }
+      };
     }
   },
 };

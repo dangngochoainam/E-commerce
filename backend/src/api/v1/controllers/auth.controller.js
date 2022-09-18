@@ -33,16 +33,17 @@ const authController = {
       }
     );
   },
-  register: async (req, res, next) => {
+  register: async (req, res) => {
     try {
       const user = req.body;
       user.avatar = req.file.path;
       const newUser = await authService.register({ user });
-      const { code, result, message } = newUser;
-      return res.status(code).json({ result, message });
+      const { code, data, message } = newUser;
+      return res.status(code).json({ data, message });
     } catch (error) {
       console.error(error);
-      next();
+      return res.status(500).json(error)
+
     }
   },
 
@@ -50,13 +51,15 @@ const authController = {
     try {
       const { username, password } = req.body;
 
-      const {code, message, user} = await authService.login( username, password );
+      const { code, message, user } = await authService.login(
+        username,
+        password
+      );
 
       const accessToken = authController.generateAccessToken(user);
       const refreshToken = authController.generateRefreshToken(user);
 
-      
-      if(refreshToken){
+      if (refreshToken) {
         refreshTokens.push(refreshToken);
         res.cookie("refreshToken", refreshToken, {
           httpOnly: true,
@@ -65,8 +68,7 @@ const authController = {
           sameSite: "strict",
         });
       }
-        return res.status(code).json( {user, accessToken});
-      
+      return res.status(code).json({ user, accessToken });
     } catch (error) {
       console.log(error);
       res.status(500).json(error);
@@ -80,7 +82,7 @@ const authController = {
     if (!refreshTokens.includes(refreshToken))
       return res.status(401).json("Refresh token is invalid");
 
-    jwt.verify(refreshToken, process.env.JWT_REFRESH_KEY, async(err, user) => {
+    jwt.verify(refreshToken, process.env.JWT_REFRESH_KEY, async (err, user) => {
       if (err) console.log(err);
       refreshTokens = refreshTokens.filter((token) => token !== refreshToken);
 
@@ -109,4 +111,4 @@ const authController = {
   },
 };
 
-module.exports = authController
+module.exports = authController;

@@ -38,12 +38,14 @@ db.HistorySearch = require("./HistorySearch.model")(sequelize, DataTypes);
 db.User.hasOne(db.Customer, {
   foreignKey: {
     allowNull: false,
+    unique: true
   },
   onDelete: "CASCADE",
 });
 db.Customer.belongsTo(db.User, {
   foreignKey: {
     allowNull: false,
+    unique: true
   },
   onDelete: "CASCADE",
 });
@@ -51,12 +53,14 @@ db.Customer.belongsTo(db.User, {
 db.User.hasOne(db.Staff, {
   foreignKey: {
     allowNull: false,
+    unique: true
   },
   onDelete: "CASCADE",
 });
 db.Staff.belongsTo(db.User, {
   foreignKey: {
     allowNull: false,
+    unique: true
   },
   onDelete: "CASCADE",
 });
@@ -64,12 +68,14 @@ db.Staff.belongsTo(db.User, {
 db.User.hasOne(db.Admin, {
   foreignKey: {
     allowNull: false,
+    unique: true
   },
   onDelete: "CASCADE",
 });
 db.Admin.belongsTo(db.User, {
   foreignKey: {
     allowNull: false,
+    unique: true
   },
   onDelete: "CASCADE",
 });
@@ -77,12 +83,14 @@ db.Admin.belongsTo(db.User, {
 db.User.hasOne(db.Seller, {
   foreignKey: {
     allowNull: false,
+    unique: true
   },
   onDelete: "CASCADE",
 });
 db.Seller.belongsTo(db.User, {
   foreignKey: {
     allowNull: false,
+    unique: true
   },
   onDelete: "CASCADE",
 });
@@ -120,19 +128,18 @@ db.SubCategory.belongsTo(db.Category, { onDelete: "SET NULL" });
 
 db.User.hasMany(db.Notification, {
   foreignKey: {
+    name: 'sourceUserId',
     allowNull: false,
   },
   onDelete: "CASCADE",
 });
 db.Notification.belongsTo(db.User, {
   foreignKey: {
+    name: 'sourceUserId',
     allowNull: false,
   },
   onDelete: "CASCADE",
 });
-
-// db.UserRole.hasMany(db.User, { onDelete: "SET NULL" });
-// db.User.belongsTo(db.UserRole, { onDelete: "SET NULL" });
 
 db.User.hasMany(db.Payment, {
   foreignKey: {
@@ -163,40 +170,46 @@ db.Address.belongsTo(db.User, {
 db.Customer.hasMany(db.Order, { onDelete: "SET NULL" });
 db.Order.belongsTo(db.Customer, { onDelete: "SET NULL" });
 
-db.Customer.hasMany(db.Comment, {
+db.User.hasMany(db.Comment, {
   foreignKey: {
+    name: "creatorId",
     allowNull: false,
   },
   onDelete: "CASCADE",
 });
-db.Comment.belongsTo(db.Customer, {
+db.Comment.belongsTo(db.User, {
   foreignKey: {
-    allowNull: false,
-  },
-  onDelete: "CASCADE",
-});
-
-db.Customer.hasMany(db.SubComment, {
-  foreignKey: {
-    allowNull: false,
-  },
-  onDelete: "CASCADE",
-});
-db.SubComment.belongsTo(db.Customer, {
-  foreignKey: {
+    name: "creatorId",
     allowNull: false,
   },
   onDelete: "CASCADE",
 });
 
-db.Customer.hasMany(db.Review, {
+db.User.hasMany(db.SubComment, {
   foreignKey: {
+    name: "creatorId",
     allowNull: false,
   },
   onDelete: "CASCADE",
 });
-db.Review.belongsTo(db.Customer, {
+db.SubComment.belongsTo(db.User, {
   foreignKey: {
+    name: "creatorId",
+    allowNull: false,
+  },
+  onDelete: "CASCADE",
+});
+
+db.User.hasMany(db.Review, {
+  foreignKey: {
+    name: 'creatorId',
+    allowNull: false,
+  },
+  onDelete: "CASCADE",
+});
+db.Review.belongsTo(db.User, {
+  foreignKey: {
+    name: 'creatorId',
     allowNull: false,
   },
   onDelete: "CASCADE",
@@ -278,7 +291,7 @@ db.HistorySearch.belongsToMany(db.User, { through: db.UserSearch });
 
 // Khi nào cần sửa cấu trúc dữ liệu thì sửa alter:true
 db.sequelize
-  .sync({ force: false })
+  .sync({ force: false, })
   .then(() => {
     console.log("All models were synchronized successfully.");
   })
@@ -303,6 +316,5 @@ db.sequelize
   // .then(() => db.Review.bulkCreate(initData.review))
   // .then(() => db.Comment.bulkCreate(initData.comment))
   // .then(() => db.SubComment.bulkCreate(initData.subComment));
-
 
 module.exports = db;

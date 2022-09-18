@@ -1,10 +1,7 @@
-
 const db = require("../models");
 const _User = db.User;
 
-
 module.exports = {
-
   getUserByUserName: async (username) => {
     try {
       const user = await _User.findOne({
@@ -19,19 +16,22 @@ module.exports = {
         };
       }
       return {
-        code: 400,
+        code: 404,
         message: "Username not found",
-        user: null
+        user: null,
       };
     } catch (error) {
       console.log(error);
+      return {
+        code: 500,
+      };
     }
   },
 
   getUserByID: async (id) => {
     try {
       const user = await _User.findByPk(id);
-      console.log
+      console.log;
       if (user) {
         return {
           code: 200,
@@ -39,12 +39,15 @@ module.exports = {
         };
       }
       return {
-        code: 400,
+        code: 404,
         message: "User not found",
-        user: null
+        user: null,
       };
     } catch (error) {
       console.log(error);
+      return {
+        code: 500,
+      };
     }
   },
 };
