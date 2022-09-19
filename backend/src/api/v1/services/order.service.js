@@ -1,15 +1,16 @@
 const db = require("../models");
 const _Order = db.Order;
 const _OrderDetails = db.OrderDetails;
+const _Product = db.Product;
 
-module.exports = {
+const orderService = {
   buy: async ({ order }) => {
     const transaction = await db.sequelize.transaction();
     try {
       // Thanh toán 1 lúc nhiều đơn hàng của các shop khác nhau
       console.log("out order");
       order.forEach(async (item) => {
-        let newOrder;
+        let newOrder, orderDetail;
         const { orderDetails, ...orthers } = item;
         orthers.createdAt = new Date();
         orthers.updatedAt = new Date();
@@ -26,15 +27,25 @@ module.exports = {
         orderDetails.forEach(async (detail) => {
           console.log("before order details");
           detail.orderId = newOrder.id;
-          await _OrderDetails.create(
+          orderDetail = await _OrderDetails.create(
             { ...detail },
             { transaction: transaction }
           );
+
+          // await orderService.handleInventory({
+          //   productId: detail.productId,
+          //   quantity: detail.quantity,
+          // });
           console.log("after order details");
         });
       });
 
-      setTimeout(async () => await transaction.commit(), 2000);
+      console.log("end out side");
+
+      setTimeout(async () => {
+        console.log("setTimeout");
+        await transaction.commit();
+      }, 1000);
 
       return {
         code: 200,
@@ -47,4 +58,24 @@ module.exports = {
       };
     }
   },
+
+  handleInventory: async ({ productId, quantity }) => {
+    try {
+      let product = await _Product.findByPk(productId);
+      console.log(product.toJSON());
+      product.unitInStock = product.unitInStock - quantity;
+      await _Product.update(
+        {
+          unitInStock: unitInStock,
+        },
+        {
+          where: { id: productId },
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  },
 };
+
+module.exports = orderService;
