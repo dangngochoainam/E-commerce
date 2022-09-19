@@ -172,7 +172,7 @@ const data = {
   product: [
     {
       id: 1,
-      name: "iPhone 14 Pro",
+      name: "iphone 14 pro",
       price: 37000000,
       description:
         "Thanh lịch, hiện đại trong từng đường nét.Thừa hưởng phong cách thiết kế tối giản, hiện đại của thế hệ iPhone 13 series, iPhone 14 Pro vẫn sở hữu cạnh viền vát phẳng và hệ thống camera được bố trí một cách hợp lý trong một cụm hình vuông. Giờ đây cụm tai thỏ quen thuộc đã được loại bỏ và thay thế vào đó là hình notch độc đáo dễ nhận diện.",
@@ -187,7 +187,7 @@ const data = {
     },
     {
         id: 2,
-        name: "Trí tuệ do thái",
+        name: "trí tuệ do thái",
         price: 110000,
         description:"Trí tuệ Do Thái là một cuốn sách tư duy đầy tham vọng trong việc nâng cao khả năng tự học tập, ghi nhớ và phân tích - những điều đã khiến người Do Thái vượt trội lên, chiếm lĩnh những vị trí quan trọng trong ngành truyền thông, ngân hàng và những giải thưởng sáng tạo trên thế giới.",
         image: "",
@@ -371,7 +371,7 @@ const data = {
       content: 'Sản phẩm tuyệt vời',
       createdAt: "2022-09-16 18:59:59",
       updatedAt: "2022-09-16 19:59:59",
-      creatorId: 2,
+      customerId: 1,
       productId: 1
     }, 
     {
@@ -380,7 +380,7 @@ const data = {
       content: 'Sách hay',
       createdAt: "2022-09-16 18:59:59",
       updatedAt: "2022-09-16 19:59:59",
-      creatorId: 4,
+      customerId: 2,
       productId: 2
     }
   ],

@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv").config();
 const db = require("../models");
 const sellerService = require("../services/seller.service");
+const customerService = require("../services/customer.service");
 const shopService = require("../services/shop.service");
 const productService = require("../services/product.service");
 
@@ -43,6 +44,26 @@ const middlewareUser = {
           next();
         } else {
           return res.status(400).json({ error: "Seller not confirmed" });
+        }
+      } else {
+        return res
+          .status(403)
+          .json("You're not authorized to access this resource_type");
+      }
+    });
+  },
+
+  verifyTokenAndCustomer: (req, res, next) => {
+    middlewareUser.verifyToken(req, res, async () => {
+      if (req.user.roles.includes("CUSTOMER")) {
+        const { data, code } = await customerService.getCustomerByUserId(
+          req.user.id
+        );
+        if (data) {
+          req.customerId = data.id;
+          next();
+        } else {
+          return res.status(code).json();
         }
       } else {
         return res

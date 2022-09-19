@@ -1,13 +1,77 @@
 const db = require("../models");
+const cloudinary = require("../../../config/cloudinary");
 const _Product = db.Product;
+const { Op } = require("sequelize");
 
 module.exports = {
-  getAllProducts: async () => {
+  compareProduct: async ({ productId1, productId2 }) => {
     try {
-      const products = await _Product.findAll();
+      const product1 = await _Product.findByPk(productId1);
+      const product2 = await _Product.findByPk(productId2);
+      const shop1 = await product1.getShop();
+      const shop2 = await product2.getShop();
+      if (product1 && product2) {
+        return {
+          code: 200,
+          data: {
+            product1: { product: product1, shop: shop1 },
+            product2: { product: product2, shop: shop2 },
+          },
+        };
+      }
+      return {
+        code: 400,
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        code: 500,
+      };
+    }
+  },
+
+  getAllProduct: async (params) => {
+    try {
+      const { page, kw, fP, tP, sortBy, order } = params;
+      let start, end;
+      if (page > 0) {
+        start = parseInt((page - 1) * process.env.PAGE_SIZE);
+        end = parseInt(start + parseInt(process.env.PAGE_SIZE));
+      }
+      const products = await _Product.findAll({
+        where: {
+          [Op.and]: [
+            kw ? { name: { [Op.substring]: kw } } : {},
+            fP ? { price: { [Op.gte]: fP } } : {},
+            tP ? { price: { [Op.lte]: tP } } : {},
+          ],
+        },
+        offset: start,
+        limit: end,
+        order: [sortBy ? [sortBy, order] : ["name", "asc"]],
+      });
       return {
         code: 200,
-        element: products,
+        data: products,
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        code: 500,
+      };
+    }
+  },
+
+  getAllProductByShopId: async (shopId) => {
+    try {
+      const products = await _Product.findAll({
+        where: {
+          shopId: shopId,
+        },
+      });
+      return {
+        code: 200,
+        data: products,
       };
     } catch (error) {
       console.log(error);
@@ -42,6 +106,11 @@ module.exports = {
 
   addProduct: async ({ product }) => {
     try {
+      const result = await cloudinary.uploader.upload(product.image, {
+        folder: "Ecommerce",
+        resource_type: "auto",
+      });
+      product.image = result.secure_url;
       const newProduct = await _Product.create({ ...product });
       if (newProduct)
         return {
@@ -60,6 +129,13 @@ module.exports = {
   },
   editProduct: async ({ productId, newProduct }) => {
     try {
+      if (newProduct.image) {
+        const result = await cloudinary.uploader.upload(newProduct.image, {
+          folder: "Ecommerce",
+          resource_type: "auto",
+        });
+        newProduct.image = result.secure_url;
+      }
       const data = await _Product.update(
         {
           ...newProduct,

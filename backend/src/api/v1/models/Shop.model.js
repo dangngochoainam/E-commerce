@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       unique: true,
     },
-    rate: DataTypes.INTEGER,
+    rate: DataTypes.FLOAT,
     description: {
       type: DataTypes.TEXT,
     },

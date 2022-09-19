@@ -200,16 +200,16 @@ db.SubComment.belongsTo(db.User, {
   onDelete: "CASCADE",
 });
 
-db.User.hasMany(db.Review, {
+db.Customer.hasMany(db.Review, {
   foreignKey: {
-    name: 'creatorId',
+    name: 'customerId',
     allowNull: false,
   },
   onDelete: "CASCADE",
 });
-db.Review.belongsTo(db.User, {
+db.Review.belongsTo(db.Customer, {
   foreignKey: {
-    name: 'creatorId',
+    name: 'customerId',
     allowNull: false,
   },
   onDelete: "CASCADE",
@@ -291,7 +291,7 @@ db.HistorySearch.belongsToMany(db.User, { through: db.UserSearch });
 
 // Khi nào cần sửa cấu trúc dữ liệu thì sửa alter:true
 db.sequelize
-  .sync({ force: false, })
+  .sync({ force: false })
   .then(() => {
     console.log("All models were synchronized successfully.");
   })

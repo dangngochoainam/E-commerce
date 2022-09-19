@@ -34,6 +34,8 @@ const authController = {
   register: async (req, res) => {
     try {
       const user = req.body;
+      user.createdAt = new Date();
+      user.updatedAt = new Date();
       if (req.files) user.avatar = req.files.avatar.tempFilePath;
       const newUser = await authService.register({ user });
       const { code, data, message } = newUser;

@@ -14,6 +14,9 @@ module.exports = (sequelize, DataTypes) => {
     image: {
       type: DataTypes.STRING,
     },
+    rate: {
+      type: DataTypes.FLOAT
+    },
     isActive: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
