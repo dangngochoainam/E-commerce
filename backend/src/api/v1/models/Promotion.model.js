@@ -8,7 +8,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING
         },
         value: {
-            type: DataTypes.DOUBLE
+            type: DataTypes.DOUBLE,
+            validate: {
+                min: 0
+            }
         }
     })
 

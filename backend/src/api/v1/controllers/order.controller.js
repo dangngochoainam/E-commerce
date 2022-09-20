@@ -1,4 +1,6 @@
 const orderService = require("../services/order.service");
+const productService = require("../services/product.service");
+
 
 module.exports = {
   // Thanh toán các sản phẩm chỉ thuộc về 1 shop
@@ -8,6 +10,17 @@ module.exports = {
     try {
       const { code, data } = await orderService.buy({ order: cart });
       return res.status(code).json(data);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json();
+    }
+  },
+
+  confirmOrder: async (req, res) => {
+    const order = req.body;
+    try {
+      const {code, error} = await orderService.confirmOrder(order)
+      return res.status(code).json(error);
     } catch (error) {
       console.log(error);
       return res.status(500).json();

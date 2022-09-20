@@ -7,6 +7,9 @@ module.exports = (sequelize, DataTypes) => {
     price: {
       type: DataTypes.DECIMAL,
       allowNull: false,
+      validate: {
+          min: 0
+      }
     },
     description: {
       type: DataTypes.TEXT,
@@ -15,7 +18,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
     },
     rate: {
-      type: DataTypes.FLOAT
+      type: DataTypes.FLOAT,
+      validate: {
+          min: 0,
+          max: 5
+      }
     },
     isActive: {
       type: DataTypes.BOOLEAN,
@@ -24,10 +31,16 @@ module.exports = (sequelize, DataTypes) => {
     unitInStock: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      validate: {
+          min: 0
+      }
     },
     unitOnOrder: {
         type: DataTypes.INTEGER,
         defaultValue: 0,
+        validate: {
+            min: 0
+        }
     }
   });
 

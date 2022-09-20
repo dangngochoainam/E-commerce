@@ -4,7 +4,13 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       unique: true,
     },
-    rate: DataTypes.FLOAT,
+    rate: {
+      type: DataTypes.FLOAT,
+      validate: {
+        min: 0,
+        max: 5,
+      },
+    },
     description: {
       type: DataTypes.TEXT,
     },

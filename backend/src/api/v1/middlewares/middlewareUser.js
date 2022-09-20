@@ -88,7 +88,7 @@ const middlewareUser = {
       } else if (data) {
         return res
           .status(403)
-          .json({ error: "You're not allowed CUD product to this shop." });
+          .json({ error: "You're not allowed CUD resources to this shop." });
       } else {
         return res.status(404).json({ error: "Not found" });
       }

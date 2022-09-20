@@ -9,6 +9,9 @@ module.exports = (sequelize, DataTypes) => {
         quantity: {
             type: DataTypes.INTEGER,
             defaultValue: 1,
+            validate: {
+                min: 0
+            }
         },
         unitPrice: {
             type: DataTypes.DECIMAL,

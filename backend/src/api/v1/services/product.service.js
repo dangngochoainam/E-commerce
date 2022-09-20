@@ -1,6 +1,7 @@
 const db = require("../models");
 const cloudinary = require("../../../config/cloudinary");
 const _Product = db.Product;
+const _OrderDetails = db.OrderDetails;
 const { Op } = require("sequelize");
 
 module.exports = {
@@ -69,6 +70,37 @@ module.exports = {
           shopId: shopId,
         },
       });
+      return {
+        code: 200,
+        data: products,
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        code: 500,
+      };
+    }
+  },
+
+  getAllProductByOrderId: async (orderId) => {
+    try {
+      const orderDetails = await _OrderDetails.findAll({
+        where: {
+          orderId: orderId,
+        },
+      });
+
+      const productIds = orderDetails.reduce(
+        (rs, item) => [...rs, item.productId],
+        []
+      );
+
+      const products = await _Product.findAll({
+        where: {
+          id: productIds,
+        },
+      });
+
       return {
         code: 200,
         data: products,

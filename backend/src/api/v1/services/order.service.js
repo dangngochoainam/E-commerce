@@ -1,8 +1,8 @@
 const db = require("../models");
+const productService = require("./product.service");
 const _Order = db.Order;
 const _OrderDetails = db.OrderDetails;
 const _Product = db.Product;
-const _Shipper = db.Shipper;
 
 const orderService = {
   // Thanh toán các sản phẩm chỉ thuộc về 1 shop
@@ -119,12 +119,108 @@ const orderService = {
 
   handleInventoryWithBuy: async ({ productId, quantity, transaction }) => {
     try {
+      await _Product.update(
+        {
+          unitOnOrder: quantity,
+        },
+        {
+          where: { id: productId },
+          transaction: transaction,
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+  confirmOrder: async ({ orderId, orderDetailIds, action }) => {
+    const transaction = await db.sequelize.transaction();
+    try {
+      const checkIsValid = await _Order.findByPk(orderId);
+
+      if (checkIsValid.isConfirm) {
+        return {
+          code: 400,
+          error: "Receipt done successfully",
+        };
+      }
+
+      const orderDetails = await _OrderDetails.findAll({
+        attributes: ["quantity", "productId"],
+        where: {
+          id: orderDetailIds,
+        },
+      });
+      if (!action) {
+        orderDetails.forEach(async (item) => {
+          await orderService.handleInventoryWithConfirm({
+            productId: item.productId,
+            quantity: item.quantity,
+            transaction: transaction,
+            action: action,
+          });
+        });
+        await _Order.destroy(
+          { where: { id: orderId } },
+          { transaction: transaction }
+        );
+
+        await transaction.commit();
+
+        return {
+          code: 204,
+        };
+      } else {
+        orderDetails.forEach(async (item) => {
+          isValid = await orderService.handleInventoryWithConfirm({
+            productId: item.productId,
+            quantity: item.quantity,
+            transaction: transaction,
+            action: action,
+          });
+        });
+
+        await _Order.update(
+          {
+            isConfirm: true,
+          },
+          {
+            where: { id: orderId },
+            transaction: transaction,
+          }
+        ),
+          await transaction.commit();
+
+        return { code: 200 };
+      }
+    } catch (error) {
+      console.log(error);
+      await transaction.rollback();
+      return {
+        code: 500,
+      };
+    }
+  },
+
+  handleInventoryWithConfirm: async ({
+    productId,
+    quantity,
+    transaction,
+    action,
+  }) => {
+    try {
       let product = await _Product.findByPk(productId);
-      // console.log(product.toJSON());
-      product.unitInStock = product.unitInStock - quantity;
+
+      if (action) {
+        product.unitOnOrder -= quantity;
+        product.unitInStock -= quantity;
+      } else {
+        product.unitOnOrder -= quantity;
+      }
       await _Product.update(
         {
           unitInStock: product.unitInStock,
+          unitOnOrder: product.unitOnOrder,
         },
         {
           where: { id: productId },
