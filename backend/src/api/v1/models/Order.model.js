@@ -1,8 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
     const Order = sequelize.define('order', {
-        totalPrice: {
-            type: DataTypes.DECIMAL
-        },
         shipAddress: {
             type: DataTypes.STRING
         },

@@ -25,7 +25,6 @@ db.Comment = require("./Comment.model")(sequelize, DataTypes);
 db.SubComment = require("./SubComment.model")(sequelize, DataTypes);
 db.Review = require("./Review.model")(sequelize, DataTypes);
 db.Shop = require("./Shop.model")(sequelize, DataTypes);
-db.Shipper = require("./Shipper.model")(sequelize, DataTypes);
 db.Product = require("./Product.model")(sequelize, DataTypes);
 db.Promotion = require("./Promotion.model")(sequelize, DataTypes);
 db.OrderDetails = require("./OrderDetails.model")(sequelize, DataTypes);
@@ -215,9 +214,6 @@ db.Review.belongsTo(db.Customer, {
   onDelete: "CASCADE",
 });
 
-db.Shipper.hasMany(db.Order, { onDelete: "SET NULL" });
-db.Order.belongsTo(db.Shipper, { onDelete: "SET NULL" });
-
 db.Shop.hasMany(db.Order, { onDelete: "SET NULL" });
 db.Order.belongsTo(db.Shop, { onDelete: "SET NULL" });
 
@@ -310,7 +306,6 @@ db.sequelize
   // .then(() => db.UserSearch.bulkCreate(initData.userSearch))
   // .then(() => db.Staff.bulkCreate(initData.staff))
   // .then(() => db.Admin.bulkCreate(initData.admin))
-  // .then(() => db.Shipper.bulkCreate(initData.shipper))
   // .then(() => db.Order.bulkCreate(initData.order))
   // .then(() => db.OrderDetails.bulkCreate(initData.orderDetails))
   // .then(() => db.Review.bulkCreate(initData.review))

@@ -324,17 +324,9 @@ const data = {
     }
   ],
 
-  shipper: [
-    {
-      id: 1, 
-      code: '2adsft2rdsf'
-    }
-  ],
-
   order: [
     {
       id: 1,
-      totalPrice: 37220000,
       shipAddress: 'Mỹ Đức - Tây An - Tây Sơn - Bình Định',
       payment: "Thanh toán online",
       createdAt: "2022-09-16 18:59:59",
