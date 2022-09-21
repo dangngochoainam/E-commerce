@@ -9,6 +9,8 @@ const shopRouter = require("./shop.router");
 const reviewRouter = require("./review.router");
 const commentRouter = require("./comment.router");
 const orderRouter = require("./order.router");
+const statsShopRouter = require("./statsShop.router");
+
 
 
 router.use("/v1/ecommerce/categories", categoryRouter);
@@ -21,6 +23,7 @@ router.use("/v1/ecommerce/products", productRouter);
 router.use("/v1/ecommerce/reviews", reviewRouter);
 router.use("/v1/ecommerce/comments", commentRouter);
 router.use("/v1/ecommerce/orders", orderRouter);
+router.use("/v1/ecommerce/statsShop", statsShopRouter);
 
 
 module.exports = router;

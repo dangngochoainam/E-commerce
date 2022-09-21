@@ -7,16 +7,14 @@ const { Op } = require("sequelize");
 module.exports = {
   compareProduct: async ({ productId1, productId2 }) => {
     try {
-      const product1 = await _Product.findByPk(productId1);
-      const product2 = await _Product.findByPk(productId2);
-      const shop1 = await product1.getShop();
-      const shop2 = await product2.getShop();
+      const product1 = await _Product.findByPk(productId1, {include: db.Shop});
+      const product2 = await _Product.findByPk(productId2, {include: db.Shop});
       if (product1 && product2) {
         return {
           code: 200,
           data: {
-            product1: { product: product1, shop: shop1 },
-            product2: { product: product2, shop: shop2 },
+            product1,
+            product2,
           },
         };
       }
