@@ -186,97 +186,98 @@ const data = {
       subCategoryId: 1,
     },
     {
-        id: 2,
-        name: "trí tuệ do thái",
-        price: 110000,
-        description:"Trí tuệ Do Thái là một cuốn sách tư duy đầy tham vọng trong việc nâng cao khả năng tự học tập, ghi nhớ và phân tích - những điều đã khiến người Do Thái vượt trội lên, chiếm lĩnh những vị trí quan trọng trong ngành truyền thông, ngân hàng và những giải thưởng sáng tạo trên thế giới.",
-        image: "",
-        unitInStock: 100,
-        createdAt: "2022-09-16 18:59:59",
-        updatedAt: "2022-09-16 19:59:59",
-        shopId: 1,
-        promotionId: 2,
-        categoryId: 5,
-        subCategoryId: null,
-      },
+      id: 2,
+      name: "trí tuệ do thái",
+      price: 110000,
+      description:
+        "Trí tuệ Do Thái là một cuốn sách tư duy đầy tham vọng trong việc nâng cao khả năng tự học tập, ghi nhớ và phân tích - những điều đã khiến người Do Thái vượt trội lên, chiếm lĩnh những vị trí quan trọng trong ngành truyền thông, ngân hàng và những giải thưởng sáng tạo trên thế giới.",
+      image: "",
+      unitInStock: 100,
+      createdAt: "2022-09-16 18:59:59",
+      updatedAt: "2022-09-16 19:59:59",
+      shopId: 1,
+      promotionId: 2,
+      categoryId: 5,
+      subCategoryId: null,
+    },
   ],
 
   address: [
     {
-      id: 1, 
-      city: 'Quy Nhơn',
-      district: 'Bình Định',
-      ward: 'Tây Sơn',
-      street: 'Tây An',
-      detail: 'Mỹ Đức - Tây An - Tây Sơn - Bình Định',
-      userId: 1
+      id: 1,
+      city: "Quy Nhơn",
+      district: "Bình Định",
+      ward: "Tây Sơn",
+      street: "Tây An",
+      detail: "Mỹ Đức - Tây An - Tây Sơn - Bình Định",
+      userId: 1,
     },
     {
-      id: 2, 
-      city: 'Quy Nhơn',
-      district: 'Bình Định',
-      ward: 'Tây Sơn',
-      street: 'Tây An',
-      detail: 'Xóm 3 - Mỹ Đức - Tây An - Tây Sơn - Bình Định',
-      userId: 2
-    }
+      id: 2,
+      city: "Quy Nhơn",
+      district: "Bình Định",
+      ward: "Tây Sơn",
+      street: "Tây An",
+      detail: "Xóm 3 - Mỹ Đức - Tây An - Tây Sơn - Bình Định",
+      userId: 2,
+    },
   ],
 
   payment: [
     {
       id: 1,
-      bank: 'Agribank',
-      account: '1951052122',
+      bank: "Agribank",
+      account: "1951052122",
       createdAt: "2022-09-16 18:59:59",
       updatedAt: "2022-09-16 19:59:59",
-      userId: 1
+      userId: 1,
     },
     {
       id: 2,
-      bank: 'LienVietPostBank',
-      account: '1951052122',
+      bank: "LienVietPostBank",
+      account: "1951052122",
       createdAt: "2022-09-16 18:59:59",
       updatedAt: "2022-09-16 19:59:59",
-      userId: 2
-    }
+      userId: 2,
+    },
   ],
 
   notification: [
     {
       id: 1,
-      content: 'Nam Đặng đã thích sản phẩm này',
+      content: "Nam Đặng đã thích sản phẩm này",
       createdAt: "2022-09-16 18:59:59",
       updatedAt: "2022-09-16 19:59:59",
       type: "PRODUCT",
       valueId: 1,
       sourceUserId: 4, //user nhận thông báo
-      creatorId: 1
+      creatorId: 1,
     },
     {
       id: 2,
-      content: 'Duyên Đặng đã thích sản phẩm này',
+      content: "Duyên Đặng đã thích sản phẩm này",
       createdAt: "2022-09-16 18:59:59",
       updatedAt: "2022-09-16 19:59:59",
       type: "PRODUCT",
       valueId: 2,
       sourceUserId: 4, //user nhận thông báo
-      creatorId: 2
-    }
+      creatorId: 2,
+    },
   ],
 
   historySearch: [
     {
       id: 1,
-      keyword: 'iphone',
+      keyword: "iphone",
       createdAt: "2022-09-16 18:59:59",
       updatedAt: "2022-09-16 19:59:59",
     },
     {
       id: 2,
-      keyword: 'Apple Watch',
+      keyword: "Apple Watch",
       createdAt: "2022-09-16 18:59:59",
       updatedAt: "2022-09-16 19:59:59",
-    }
+    },
   ],
 
   userSearch: [
@@ -295,45 +296,45 @@ const data = {
       userId: 3,
       historySearchId: 2,
     },
-    
   ],
 
   customer: [
     {
       id: 1,
-      userId: 2
+      userId: 2,
     },
     {
       id: 2,
-      userId: 4
-    }
+      userId: 4,
+    },
   ],
 
   staff: [
     {
       id: 1,
-      hireDate: '2022-09-16 18:59:59',
-      userId: 3
-    }
+      hireDate: "2022-09-16 18:59:59",
+      userId: 3,
+    },
   ],
 
   admin: [
     {
       id: 1,
-      userId: 1
-    }
+      userId: 1,
+    },
   ],
 
   order: [
     {
       id: 1,
-      shipAddress: 'Mỹ Đức - Tây An - Tây Sơn - Bình Định',
+      shipAddress: "Mỹ Đức - Tây An - Tây Sơn - Bình Định",
       payment: "Thanh toán online",
       createdAt: "2022-09-16 18:59:59",
       updatedAt: "2022-09-16 19:59:59",
       customerId: 2,
+      isConfirm: true,
       shipperId: 1,
-      shopId: 1
+      shopId: 1,
     },
   ],
 
@@ -344,7 +345,7 @@ const data = {
       unitPrice: 170000,
       discount: 0.1,
       productId: 2,
-      orderId: 1, 
+      orderId: 1,
     },
     {
       id: 2,
@@ -352,63 +353,60 @@ const data = {
       unitPrice: 37000000,
       discount: 0.1,
       productId: 1,
-      orderId: 1, 
-    }
+      orderId: 1,
+    },
   ],
 
   review: [
     {
       id: 1,
       rate: 5,
-      content: 'Sản phẩm tuyệt vời',
+      content: "Sản phẩm tuyệt vời",
       createdAt: "2022-09-16 18:59:59",
       updatedAt: "2022-09-16 19:59:59",
       customerId: 1,
-      productId: 1
-    }, 
+      productId: 1,
+    },
     {
       id: 2,
       rate: 5,
-      content: 'Sách hay',
+      content: "Sách hay",
       createdAt: "2022-09-16 18:59:59",
       updatedAt: "2022-09-16 19:59:59",
       customerId: 2,
-      productId: 2
-    }
+      productId: 2,
+    },
   ],
-
 
   comment: [
     {
       id: 1,
-      content: 'Sách rất hay, nên mua',
+      content: "Sách rất hay, nên mua",
       createdAt: "2022-09-16 18:59:59",
       updatedAt: "2022-09-16 19:59:59",
       creatorId: 2,
-      productId: 2
+      productId: 2,
     },
     {
       id: 2,
-      content: 'Cuốn sách này đã thay đổi cuộc đời tôi',
+      content: "Cuốn sách này đã thay đổi cuộc đời tôi",
       createdAt: "2022-09-16 18:59:59",
       updatedAt: "2022-09-16 19:59:59",
       creatorId: 4,
-      productId: 2
+      productId: 2,
     },
   ],
 
   subComment: [
     {
       id: 1,
-      content: 'Tôi đồng ý với ý kiến của bạn',
+      content: "Tôi đồng ý với ý kiến của bạn",
       createdAt: "2022-09-16 18:59:59",
       updatedAt: "2022-09-16 19:59:59",
       creatorId: 4,
-      commentId: 1
-    }
-  ]
-
-
+      commentId: 1,
+    },
+  ],
 };
 
 module.exports = data;

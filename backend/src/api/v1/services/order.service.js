@@ -9,45 +9,74 @@ const orderService = {
   buy: async ({ order }) => {
     const transaction = await db.sequelize.transaction();
     try {
-      let newOrder, orderDetail, shipper;
+      let newOrder;
+      let check = true;
       const { orderDetails, ...orthers } = order;
+
+      let items = orderDetails.reduce((acc, item) => {
+        acc.push({
+          productId: item.productId,
+          quantity: item.quantity,
+        });
+        return acc;
+      }, []);
+
+      let productIds = items.reduce(
+        (acc, item) => [...acc, item.productId],
+        []
+      );
+
+      let products = await _Product.findAll({
+        where: {
+          id: productIds,
+        },
+      });
+
+      for (let i = 0; i < products.length; i++) {
+        if (
+          products[i].id === items[i].productId &&
+          products[i].unitInStock - items[i].quantity < 0
+        ) {
+          check = false;
+          break;
+        }
+
+        products[i].unitInStock -= items[i].quantity;
+        products[i].unitOnOrder += items[i].quantity;
+      }
+
+      if (!check) throw "The product is out of stock";
+
+      products.forEach(async (product) => {
+        await _Product.update(
+          {
+            unitInStock: product.unitInStock,
+            unitOnOrder: product.unitOnOrder,
+          },
+          {
+            where: { id: product.id },
+            transaction: transaction,
+          }
+        );
+      });
+
       orthers.createdAt = new Date();
       orthers.updatedAt = new Date();
-
-      console.log("before order");
       newOrder = await _Order.create(
         {
           ...orthers,
         },
         { transaction: transaction }
       );
-      console.log("after order");
 
       orderDetails.forEach(async (detail) => {
-        console.log("before order details");
         detail.orderId = newOrder.id;
-        orderDetail = await _OrderDetails.create(
-          { ...detail },
-          { transaction: transaction }
-        );
-        console.log("after order details");
-
-        console.log("before handleInventory");
-        await orderService.handleInventoryWithBuy({
-          productId: detail.productId,
-          quantity: detail.quantity,
-          transaction: transaction,
-        });
-        console.log("after handleInventory");
+        await _OrderDetails.create({ ...detail }, { transaction: transaction });
       });
 
-      console.log("end out side");
+      await _Order.findOne();
 
-      setTimeout(async () => {
-        console.log("setTimeout");
-        await transaction.commit();
-      }, 1000);
-
+      await transaction.commit();
       return {
         code: 200,
       };
@@ -56,6 +85,7 @@ const orderService = {
       await transaction.rollback();
       return {
         code: 500,
+        error: error,
       };
     }
   },
@@ -117,22 +147,6 @@ const orderService = {
   //   }
   // },
 
-  handleInventoryWithBuy: async ({ productId, quantity, transaction }) => {
-    try {
-      await _Product.update(
-        {
-          unitOnOrder: quantity,
-        },
-        {
-          where: { id: productId },
-          transaction: transaction,
-        }
-      );
-    } catch (error) {
-      console.log(error);
-    }
-  },
-
   confirmOrder: async ({ orderId, orderDetailIds, action }) => {
     const transaction = await db.sequelize.transaction();
     try {
@@ -151,28 +165,9 @@ const orderService = {
           id: orderDetailIds,
         },
       });
-      if (!action) {
+      if (action === "DONE") {
         orderDetails.forEach(async (item) => {
-          await orderService.handleInventoryWithConfirm({
-            productId: item.productId,
-            quantity: item.quantity,
-            transaction: transaction,
-            action: action,
-          });
-        });
-        await _Order.destroy(
-          { where: { id: orderId } },
-          { transaction: transaction }
-        );
-
-        await transaction.commit();
-
-        return {
-          code: 204,
-        };
-      } else {
-        orderDetails.forEach(async (item) => {
-          isValid = await orderService.handleInventoryWithConfirm({
+          await orderService.handleInventory({
             productId: item.productId,
             quantity: item.quantity,
             transaction: transaction,
@@ -188,10 +183,27 @@ const orderService = {
             where: { id: orderId },
             transaction: transaction,
           }
-        ),
-          await transaction.commit();
+        );
+        await transaction.commit();
 
         return { code: 200 };
+      } else {
+        orderDetails.forEach(async (item) => {
+          await orderService.handleInventory({
+            productId: item.productId,
+            quantity: item.quantity,
+            transaction: transaction,
+            action: action,
+          });
+        });
+        await _Order.destroy(
+          { where: { id: orderId } },
+          { transaction: transaction }
+        );
+        await transaction.commit();
+        return {
+          code: 204,
+        };
       }
     } catch (error) {
       console.log(error);
@@ -202,34 +214,26 @@ const orderService = {
     }
   },
 
-  handleInventoryWithConfirm: async ({
-    productId,
-    quantity,
-    transaction,
-    action,
-  }) => {
-    try {
-      let product = await _Product.findByPk(productId);
+  handleInventory: async ({ productId, quantity, transaction, action }) => {
+    let product = await _Product.findByPk(productId);
 
-      if (action) {
-        product.unitOnOrder -= quantity;
-        product.unitInStock -= quantity;
-      } else {
-        product.unitOnOrder -= quantity;
-      }
-      await _Product.update(
-        {
-          unitInStock: product.unitInStock,
-          unitOnOrder: product.unitOnOrder,
-        },
-        {
-          where: { id: productId },
-          transaction: transaction,
-        }
-      );
-    } catch (error) {
-      console.log(error);
+    if (action === "DONE") {
+      product.unitOnOrder -= quantity;
+    } else {
+      product.unitOnOrder -= quantity;
+      product.unitInStock += quantity;
     }
+    await _Product.update(
+      {
+        unitInStock: product.unitInStock,
+        unitOnOrder: product.unitOnOrder,
+      },
+      {
+        where: { id: productId },
+        transaction: transaction,
+      }
+    );
+    return true;
   },
 };
 
