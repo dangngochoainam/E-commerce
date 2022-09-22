@@ -3,12 +3,31 @@ const cloudinary = require("../../../config/cloudinary");
 const _Product = db.Product;
 const _OrderDetails = db.OrderDetails;
 const { Op } = require("sequelize");
+const { QueryTypes } = require("sequelize");
 
-module.exports = {
+const productService = {
+  getProductToCompare: async (productId) => {
+    try {
+      const product = await db.sequelize.query(
+        `select p.*, s.name as 'Ten shop', s.rate as 'Rate shop', sum(d.quantity) as 'Tong san pham ban duoc'
+      from ecommerce_db.order_details as d, ecommerce_db.product as p, ecommerce_db.order as o, ecommerce_db.shop s 
+      where d.productId = p.id and o.id = d.orderId and p.shopId = s.id and p.id = :productId`,
+        {
+          replacements: {
+            productId: productId,
+          },
+          type: QueryTypes.SELECT,
+        }
+      );
+      return product;
+    } catch (error) {
+      console.log(error);
+    }
+  },
   compareProduct: async ({ productId1, productId2 }) => {
     try {
-      const product1 = await _Product.findByPk(productId1, {include: db.Shop});
-      const product2 = await _Product.findByPk(productId2, {include: db.Shop});
+      const product1 = await productService.getProductToCompare(productId1);
+      const product2 = await productService.getProductToCompare(productId2);
       if (product1 && product2) {
         return {
           code: 200,
@@ -209,3 +228,5 @@ module.exports = {
     }
   },
 };
+
+module.exports = productService;

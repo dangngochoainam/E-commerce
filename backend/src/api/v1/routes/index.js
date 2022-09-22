@@ -10,8 +10,8 @@ const reviewRouter = require("./review.router");
 const commentRouter = require("./comment.router");
 const orderRouter = require("./order.router");
 const statsShopRouter = require("./statsShop.router");
-
-
+const adminRouter = require("./admin.router");
+const notificationRouter = require("./notification.router");
 
 router.use("/v1/ecommerce/categories", categoryRouter);
 router.use("/v1/ecommerce/users", userRouter);
@@ -24,6 +24,7 @@ router.use("/v1/ecommerce/reviews", reviewRouter);
 router.use("/v1/ecommerce/comments", commentRouter);
 router.use("/v1/ecommerce/orders", orderRouter);
 router.use("/v1/ecommerce/statsShop", statsShopRouter);
-
+router.use("/v1/ecommerce/admin", adminRouter);
+router.use("/v1/ecommerce/notifications", notificationRouter);
 
 module.exports = router;

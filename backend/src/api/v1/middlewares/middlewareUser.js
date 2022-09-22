@@ -34,6 +34,17 @@ const middlewareUser = {
       }
     });
   },
+  verifyTokenAndAdmin: (req, res, next) => {
+    middlewareUser.verifyToken(req, res, async () => {
+      if (req.user.roles.includes("ADMIN")) {
+        next();
+      } else {
+        return res
+          .status(403)
+          .json("You're not authorized to access this resource_type");
+      }
+    });
+  },
 
   verifyTokenAndSeller: (req, res, next) => {
     middlewareUser.verifyToken(req, res, async () => {
@@ -80,6 +91,7 @@ const middlewareUser = {
       const productId = req.params.id;
       const product = await productService.getProductById(productId);
       if (product.data) shopId = product.data.shopId;
+      if (req.params.shopId) shopId = req.params.shopId;
       if (req.body.shopId !== undefined) shopId = req.body.shopId;
 
       const { data } = await shopService.getShopById(shopId);
