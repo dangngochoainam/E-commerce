@@ -2,6 +2,7 @@ const db = require("../models");
 const _Review = db.Review;
 const _Product = db.Product;
 const _Shop = db.Shop;
+const { QueryTypes } = require("sequelize");
 
 const reviewService = {
   getReviewByProductId: async (productId) => {
@@ -27,13 +28,36 @@ const reviewService = {
       };
     }
   },
+  countRateOfProduct: async (productId) => {
+    try {
+      const rate = await db.sequelize.query(
+        `select rate, count(*) as rateCount from review 
+        where productId = :productId 
+        group by rate 
+        order by rate desc`,
+        {
+          replacements: { productId: productId },
+          type: QueryTypes.SELECT,
+        }
+      );
+      return {
+        code: 200,
+        data: rate,
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        code: 500,
+      };
+    }
+  },
   addReview: async ({ review }) => {
     try {
       const newReview = await _Review.create({ ...review });
       if (newReview) {
         const product = await newReview.getProduct();
         const shopId = product.shopId;
-        const { rateProduct } = await reviewService.countRateOnProduct(
+        const { rateProduct } = await reviewService.calAVGRateOnProduct(
           newReview.productId
         );
 
@@ -46,7 +70,7 @@ const reviewService = {
           }
         );
 
-        const { rateShop } = await reviewService.countRateOnShop(shopId);
+        const { rateShop } = await reviewService.calAVGRateOnShop(shopId);
         await _Shop.update(
           { rate: rateShop },
           {
@@ -73,7 +97,7 @@ const reviewService = {
     }
   },
 
-  countRateOnProduct: async (productId) => {
+  calAVGRateOnProduct: async (productId) => {
     try {
       const rate = await db.sequelize.query(
         `select avg(rate) as rateProduct from review where productId = :productId`,
@@ -88,7 +112,7 @@ const reviewService = {
     }
   },
 
-  countRateOnShop: async (shopId) => {
+  calAVGRateOnShop: async (shopId) => {
     try {
       const rate = await db.sequelize.query(
         `select avg(rate) as rateShop from product where shopId = :shopId`,

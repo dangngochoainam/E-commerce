@@ -1,0 +1,15 @@
+export let endpoints = {
+  categories: "/categories/",
+  users: "/users/",
+  shop: "/shop/",
+  auth: "/",
+  staffs: "/staffs/",
+  sellers: "/sellers/",
+  products: "/products/",
+  reviews: "/reviews/",
+  comments: "/comments/",
+  orders: "/orders/",
+  statsShop: "/statsShop/",
+  admin: "/admin/",
+  notifications: "/notifications/",
+};

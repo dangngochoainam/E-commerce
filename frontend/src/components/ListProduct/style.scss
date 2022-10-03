@@ -1,0 +1,33 @@
+.item__product-name {
+    word-break: break-all;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+}
+.filter__item {
+    position: relative;
+    cursor: pointer;
+    text-transform: capitalize;
+}
+
+.filter__item:hover::after {
+    content: "";
+}
+.filter__item:hover {
+    color: rgb(11, 116, 229);
+    font-weight: 500;
+}
+
+.filter__item::after {
+    position: absolute;
+    // content: "";
+    top: 100%;
+    left: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 4px;
+    border-radius: 2px;
+    background-color: rgb(11, 116, 229);
+}

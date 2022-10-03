@@ -4,7 +4,9 @@ module.exports = {
   getReviewByProductId: async (req, res) => {
     const productId = req.params.productId;
     try {
-      const { code, data } = await reviewService.getReviewByProductId(productId);
+      const { code, data } = await reviewService.getReviewByProductId(
+        productId
+      );
       return res.status(code).json(data);
     } catch (error) {
       console.log(error);
@@ -19,6 +21,16 @@ module.exports = {
     review.updatedAt = new Date();
     try {
       const { code, data } = await reviewService.addReview({ review });
+      return res.status(code).json(data);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json();
+    }
+  },
+  countRateOfProduct: async (req, res) => {
+    let productId = req.query.productId;
+    try {
+      const { code, data } = await reviewService.countRateOfProduct(productId);
       return res.status(code).json(data);
     } catch (error) {
       console.log(error);
