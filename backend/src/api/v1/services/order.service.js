@@ -79,6 +79,9 @@ const orderService = {
       await transaction.commit();
       return {
         code: 200,
+        data: {
+          status: 200,
+        },
       };
     } catch (error) {
       console.log(error);
@@ -155,7 +158,11 @@ const orderService = {
       if (checkIsValid.isConfirm) {
         return {
           code: 400,
-          error: "Receipt done successfully",
+          data: {
+            status: 400,
+
+            error: "Đơn hàng đã được thành toán thành công",
+          },
         };
       }
 
@@ -186,7 +193,12 @@ const orderService = {
         );
         await transaction.commit();
 
-        return { code: 200 };
+        return {
+          code: 200,
+          data: {
+            status: 200,
+          },
+        };
       } else {
         orderDetails.forEach(async (item) => {
           await orderService.handleInventory({
@@ -203,6 +215,9 @@ const orderService = {
         await transaction.commit();
         return {
           code: 204,
+          data: {
+            status: 204,
+          },
         };
       }
     } catch (error) {

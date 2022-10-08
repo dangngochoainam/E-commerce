@@ -32,8 +32,11 @@ const productService = {
         return {
           code: 200,
           data: {
-            product1,
-            product2,
+            status: 200,
+            data: {
+              product1,
+              product2,
+            },
           },
         };
       }
@@ -50,27 +53,48 @@ const productService = {
 
   getAllProduct: async (params) => {
     try {
-      const { page, kw, fP, tP, sortBy, order } = params;
-      let start, end;
+      const { page, kw, fP, tP, sortBy, order, cate, subCate } = params;
+
+      let start;
       if (page > 0) {
         start = parseInt((page - 1) * process.env.PAGE_SIZE);
-        end = parseInt(start + parseInt(process.env.PAGE_SIZE));
       }
+
       const products = await _Product.findAll({
         where: {
           [Op.and]: [
             kw ? { name: { [Op.substring]: kw } } : {},
             fP ? { price: { [Op.gte]: fP } } : {},
             tP ? { price: { [Op.lte]: tP } } : {},
+            cate ? { categoryId: cate } : {},
+            subCate ? { subCategoryId: subCate } : {},
           ],
         },
         offset: start,
-        limit: end,
-        order: [sortBy ? [sortBy, order] : ["name", "asc"]],
+        limit: parseInt(process.env.PAGE_SIZE),
+        order: [sortBy ? [sortBy, order] : ["id", "asc"]],
       });
+
+      const productAmount = await _Product.count({
+        where: {
+          [Op.or]: [
+            kw ? { name: { [Op.substring]: kw } } : {},
+            cate ? { categoryId: cate } : {},
+            subCate ? { subCategoryId: subCate } : {},
+            !kw && !cate && !subCate ? { isActive: true } : {},
+          ],
+        },
+      });
+
       return {
         code: 200,
-        data: products,
+        data: {
+          status: 200,
+          data: {
+            products,
+            productAmount,
+          },
+        },
       };
     } catch (error) {
       console.log(error);
@@ -89,7 +113,11 @@ const productService = {
       });
       return {
         code: 200,
-        data: products,
+        data: {
+          status: 200,
+
+          data: products,
+        },
       };
     } catch (error) {
       console.log(error);
@@ -120,7 +148,11 @@ const productService = {
 
       return {
         code: 200,
-        data: products,
+        data: {
+          status: 200,
+
+          data: products,
+        },
       };
     } catch (error) {
       console.log(error);
@@ -136,14 +168,20 @@ const productService = {
       if (product) {
         return {
           code: 200,
-          data: product,
+          data: {
+            status: 200,
+
+            data: product,
+          },
         };
       }
 
       return {
         code: 404,
-        message: "Product not found",
-        data: null,
+        data: {
+          status: 404,
+          error: "Sản phẩm không tồn tại",
+        },
       };
     } catch (error) {
       console.log(error);
@@ -164,7 +202,11 @@ const productService = {
       if (newProduct)
         return {
           code: 201,
-          data: newProduct,
+          data: {
+            status: 201,
+
+            data: newProduct,
+          },
         };
       return {
         code: 400,
@@ -196,6 +238,9 @@ const productService = {
       if (data[0] !== 0) {
         return {
           code: 200,
+          data: {
+            status: 200
+          }
         };
       } else {
         return {
@@ -216,6 +261,9 @@ const productService = {
       if (data)
         return {
           code: 204,
+          data: {
+            status: 204
+          }
         };
       return {
         code: 400,
@@ -230,5 +278,3 @@ const productService = {
 };
 
 module.exports = productService;
-
-

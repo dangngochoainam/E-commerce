@@ -1,5 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import ListProduct from "./components/ListProduct";
+import Login from "./components/Login";
+import Register from "./components/Register";
 import Error from "./layouts/Error";
 import Header from "./layouts/Header";
 import Cart from "./pages/Cart";
@@ -16,11 +18,14 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Home />}>
               <Route index element={<LandingPage />} />
-              <Route path="/search" element={<ListProduct />} />
+              <Route path="/search" element={<ListProduct />} />      
+              <Route path="/categories/:categoryId" element={<ListProduct />} />      
             </Route>
 
             <Route path="/:productId" element={<ProductDetails />}></Route>
             <Route path="/cart" element={<Cart />}></Route>
+            <Route path="/register" element={<Register />}/>
+            <Route path="/login" element={<Login />}/>
             <Route path="*" element={<Error />} />
           </Routes>
         </div>

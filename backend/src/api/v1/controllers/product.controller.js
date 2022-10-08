@@ -18,6 +18,7 @@ module.exports = {
   getAllProduct: async (req, res) => {
     try {
       let params = req.query;
+      params.page = params.page === undefined ? 1 : params.page;
       const { code, data } = await productService.getAllProduct(params);
       return res.status(code).json(data);
     } catch (error) {

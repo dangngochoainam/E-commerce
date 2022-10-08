@@ -37,12 +37,13 @@ const authController = {
       user.createdAt = new Date();
       user.updatedAt = new Date();
       if (req.files) user.avatar = req.files.avatar.tempFilePath;
+
       const newUser = await authService.register({ user });
-      const { code, data, message } = newUser;
-      return res.status(code).json({ data, message });
+      const { code, data } = newUser;
+      return res.status(code).json(data);
     } catch (error) {
       console.error(error);
-      return res.status(500).json(error);
+      return res.status(500).json();
     }
   },
 
@@ -50,10 +51,13 @@ const authController = {
     try {
       const { username, password } = req.body;
 
-      const { code, user } = await authService.login(username, password);
+      const { code, data } = await authService.login(username, password);
+      if (data.data === undefined) {
+        return res.status(code).json(data);
+      }
 
-      const accessToken = authController.generateAccessToken(user);
-      const refreshToken = authController.generateRefreshToken(user);
+      const accessToken = authController.generateAccessToken(data.data);
+      const refreshToken = authController.generateRefreshToken(data.data);
 
       if (refreshToken) {
         refreshTokens.push(refreshToken);
@@ -64,7 +68,7 @@ const authController = {
           sameSite: "strict",
         });
       }
-      return res.status(code).json({ user, accessToken });
+      return res.status(code).json({ data, accessToken });
     } catch (error) {
       console.log(error);
       res.status(500).json(error);
@@ -73,7 +77,6 @@ const authController = {
 
   requestRefreshToken: async (req, res) => {
     const refreshToken = req.cookies.refreshToken;
-    console.log(refreshToken);
 
     if (!refreshToken) return res.status(401).json("You're not authenticated");
     if (!refreshTokens.includes(refreshToken))
@@ -84,8 +87,8 @@ const authController = {
       refreshTokens = refreshTokens.filter((token) => token !== refreshToken);
 
       user = await userService.getUserByID(user.id);
-      const newAccessToken = authController.generateAccessToken(user.user);
-      const newRefreshToken = authController.generateRefreshToken(user.user);
+      const newAccessToken = authController.generateAccessToken(user.data.user);
+      const newRefreshToken = authController.generateRefreshToken(user.data.user);
       refreshTokens.push(newRefreshToken);
 
       res.cookie("refreshToken", newRefreshToken, {

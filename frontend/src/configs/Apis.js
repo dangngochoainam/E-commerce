@@ -3,6 +3,7 @@ export let endpoints = {
   users: "/users/",
   shop: "/shop/",
   auth: "/",
+  login: "/login/",
   staffs: "/staffs/",
   sellers: "/sellers/",
   products: "/products/",

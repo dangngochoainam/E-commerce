@@ -28,7 +28,7 @@ module.exports = {
     }
   },
   countRateOfProduct: async (req, res) => {
-    let productId = req.query.productId;
+    let productId = req.params.productId;
     try {
       const { code, data } = await reviewService.countRateOfProduct(productId);
       return res.status(code).json(data);

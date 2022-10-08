@@ -74,7 +74,11 @@ module.exports = {
 
       return {
         code: 200,
-        data: notification,
+        data: {
+          status: 200,
+
+          data: notification,
+        },
       };
     } catch (error) {
       console.log(error);
@@ -93,7 +97,11 @@ module.exports = {
       });
       return {
         code: 200,
-        data: notifications,
+        data: {
+          status: 200,
+
+          data: notifications,
+        },
       };
     } catch (error) {
       console.log(error);

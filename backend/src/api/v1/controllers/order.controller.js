@@ -7,8 +7,8 @@ module.exports = {
     const cart = req.body;
     cart.customerId = req.customerId;
     try {
-      const { code, error } = await orderService.buy({ order: cart });
-      return res.status(code).json(error);
+      const { code, data } = await orderService.buy({ order: cart });
+      return res.status(code).json(data);
     } catch (error) {
       console.log(error);
       return res.status(500).json();
@@ -18,8 +18,8 @@ module.exports = {
   confirmOrder: async (req, res) => {
     const order = req.body;
     try {
-      const { code, error } = await orderService.confirmOrder(order);
-      return res.status(code).json(error);
+      const { code, data } = await orderService.confirmOrder(order);
+      return res.status(code).json(data);
     } catch (error) {
       console.log(error);
       return res.status(500).json();

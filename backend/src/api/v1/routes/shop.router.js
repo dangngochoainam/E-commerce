@@ -5,6 +5,7 @@ const middlewareUser = require('../middlewares/middlewareUser')
 
 
 router.post('/', middlewareUser.verifyTokenAndSeller, shopController.register)
-router.get('/:shopId', productController.getAllProductByShopId)
+router.get('/:shopId', shopController.getShopById)
+router.get('/:shopId/products', productController.getAllProductByShopId)
 
 module.exports = router

@@ -12,11 +12,13 @@ module.exports = {
         "price-color": "rgb(255, 66, 78)",
         "promotion-color": "rgb(255, 66, 78)",
         "dark-blue": "rgb(13, 92, 182)",
+        "primary": "#0083ff"
       },
       backgroundColor: {
         "light-gray": "rgb(128, 128, 137)",
         "light-red": "rgb(255, 66, 78)",
-        "main": "#f5f5fa"
+        "main": "#f5f5fa",
+        "primary": "#0083ff"
       },
     },
   },

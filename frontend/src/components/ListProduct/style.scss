@@ -1,33 +1,81 @@
-.item__product-name {
-    word-break: break-all;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    overflow: hidden;
-}
-.filter__item {
-    position: relative;
-    cursor: pointer;
-    text-transform: capitalize;
-}
+.container__products {
+    .item__product-name {
+        word-break: break-all;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+    }
+    .filter__item {
+        position: relative;
+        cursor: pointer;
+        text-transform: capitalize;
+    }
 
-.filter__item:hover::after {
-    content: "";
-}
-.filter__item:hover {
-    color: rgb(11, 116, 229);
-    font-weight: 500;
-}
+    .filter__item:hover::after {
+        content: "";
+    }
+    .filter__item:hover {
+        color: rgb(11, 116, 229);
+        font-weight: 500;
+    }
 
-.filter__item::after {
-    position: absolute;
-    // content: "";
-    top: 100%;
-    left: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 40px;
-    height: 4px;
-    border-radius: 2px;
-    background-color: rgb(11, 116, 229);
+    .filter__item::after {
+        position: absolute;
+        // content: "";
+        top: 100%;
+        left: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 40px;
+        height: 4px;
+        border-radius: 2px;
+        background-color: rgb(11, 116, 229);
+    }
+
+    .page-item.disabled .page-link {
+        color: #6c757d;
+        pointer-events: none;
+        background-color: #fff;
+        border-color: #dee2e6;
+    }
+
+    .page-link {
+        padding: 0.375rem 0.75rem;
+    }
+
+    .page-item.active .page-link {
+        z-index: 3;
+        color: #fff;
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+    }
+
+    .page-item:first-child .page-link {
+        border-top-left-radius: 0.25rem;
+        border-bottom-left-radius: 0.25rem;
+    }
+
+    .page-link {
+        // position: relative;
+        display: block;
+        color: #0d6efd;
+        text-decoration: none;
+        background-color: #fff;
+        border: 1px solid #dee2e6;
+        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+            box-shadow 0.15s ease-in-out;
+    }
+
+    .page-link:hover {
+        z-index: 2;
+        color: #0a58ca;
+        background-color: #e9ecef;
+        border-color: #dee2e6;
+    }
+
+    .justify-content-center {
+        display: flex;
+        justify-content: center;
+    }
 }

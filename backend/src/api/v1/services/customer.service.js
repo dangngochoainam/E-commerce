@@ -8,12 +8,18 @@ module.exports = {
       if (customer)
         return {
           code: 200,
-          data: customer,
+          data: {
+            status: 200,
+
+            data: customer,
+          },
         };
       return {
         code: 404,
-        message: "Customer not found",
-        data: null,
+        data: {
+          error: "Khách hàng không tồn tại",
+          status: 404,
+        },
       };
     } catch (error) {
       console.log(error);

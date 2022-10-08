@@ -7,7 +7,7 @@ router.post(
   middlewareUser.verifyTokenAndCustomer,
   reviewController.addReview
 );
-router.get("/rateOfProduct", reviewController.countRateOfProduct);
+router.get("/rateOfProduct/:productId", reviewController.countRateOfProduct);
 router.get("/:productId", reviewController.getReviewByProductId);
 
 module.exports = router;

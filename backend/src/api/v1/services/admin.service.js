@@ -59,7 +59,10 @@ const statsAdmin = {
 
       return {
         code: 200,
-        data: stats,
+        data: {
+          status: 200,
+          data: stats,
+        },
       };
     } catch (error) {
       console.log(error);

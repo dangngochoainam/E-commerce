@@ -12,13 +12,19 @@ module.exports = {
       if (user) {
         return {
           code: 200,
-          user: user,
+          data: {
+            status: 200,
+
+            user: user,
+          },
         };
       }
       return {
         code: 404,
-        message: "Username not found",
-        user: null,
+        data: {
+          status: 404,
+          error: "Người dùng không tồn tại",
+        },
       };
     } catch (error) {
       console.log(error);
@@ -35,13 +41,19 @@ module.exports = {
       if (user) {
         return {
           code: 200,
-          user: user,
+          data: {
+            status: 200,
+
+            user: user,
+          },
         };
       }
       return {
         code: 404,
-        message: "User not found",
-        user: null,
+        data: {
+          status: 404,
+          error: "Người dùng không tồn tại",
+        },
       };
     } catch (error) {
       console.log(error);

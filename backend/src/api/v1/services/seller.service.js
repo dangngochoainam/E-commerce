@@ -8,12 +8,18 @@ module.exports = {
       if (seller)
         return {
           code: 200,
-          data: seller,
+          data: {
+            status: 200,
+            data: seller,
+          },
         };
       return {
         code: 404,
-        message: "Seller not found",
-        data: null,
+        data: {
+          status: 404,
+
+          error: "Người bán không tồn tại",
+        },
       };
     } catch (error) {
       console.log(error);
@@ -34,12 +40,15 @@ module.exports = {
       if (sellers) {
         return {
           code: 200,
-          data: sellers,
+          data: {
+            status: 200,
+
+            data: sellers,
+          },
         };
       }
       return {
         code: 400,
-        data: null,
       };
     } catch (error) {
       console.log(error);

@@ -9,12 +9,17 @@ module.exports = {
       if (staff)
         return {
           code: 200,
-          data: staff,
+          data: {
+            status: 200,
+
+            data: staff,
+          },
         };
       return {
         code: 404,
-        message: "Staff not found",
-        data: null,
+        data: {
+          error: "Nhân viên không tồn tại",
+        },
       };
     } catch (error) {
       console.log(error);
@@ -38,6 +43,9 @@ module.exports = {
       if (seller)
         return {
           code: 200,
+          data: {
+            status: 200,
+          },
         };
 
       return {

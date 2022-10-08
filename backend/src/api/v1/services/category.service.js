@@ -8,7 +8,10 @@ module.exports = {
       const categories = await _Category.findAll();
       return {
         code: 200,
-        data: categories,
+        data: {
+          status: 200,
+          data: categories
+        },
       };
     } catch (error) {
       console.log(error);
@@ -28,7 +31,10 @@ module.exports = {
       if (subCategories)
         return {
           code: 200,
-          data: subCategories,
+          data: {
+            stauts: 200,
+            data: subCategories
+          },
         };
 
       return {

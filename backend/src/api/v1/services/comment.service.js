@@ -1,11 +1,16 @@
 const db = require("../models");
 const _Comment = db.Comment;
 const _SubCommnet = db.SubComment;
+const _User = db.User;
 
 module.exports = {
   getCommentByProductId: async (productId) => {
     try {
       const comments = await _Comment.findAll({
+        include: {
+          model: _User,
+          attributes: ["firstname", "lastname", "avatar"],
+        },
         where: {
           productId: productId,
         },
@@ -13,7 +18,10 @@ module.exports = {
       if (comments)
         return {
           code: 200,
-          data: comments,
+          data: {
+            status: 200,
+            data: comments,
+          },
         };
       return {
         code: 404,
@@ -28,6 +36,10 @@ module.exports = {
   getSubCommentByCommentId: async (commentId) => {
     try {
       const subComments = await _SubCommnet.findAll({
+        include: {
+          model: _User,
+          attributes: ["firstname", "lastname", "avatar"],
+        },
         where: {
           commentId: commentId,
         },
@@ -35,7 +47,11 @@ module.exports = {
       if (subComments)
         return {
           code: 200,
-          data: subComments,
+          data: {
+            status: 200,
+
+            data: subComments,
+          },
         };
       return {
         code: 404,
@@ -53,7 +69,11 @@ module.exports = {
       if (newComment)
         return {
           code: 201,
-          data: newComment,
+          data: {
+            status: 201,
+
+            data: newComment,
+          },
         };
       return {
         code: 400,
@@ -71,7 +91,11 @@ module.exports = {
       if (newSubComment)
         return {
           code: 201,
-          data: newSubComment,
+          data: {
+            status: 201,
+
+            data: newSubComment,
+          },
         };
       return {
         code: 400,

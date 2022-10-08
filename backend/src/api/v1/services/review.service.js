@@ -15,7 +15,10 @@ const reviewService = {
       if (reviews) {
         return {
           code: 200,
-          data: reviews,
+          data: {
+            status: 200,
+            data: reviews,
+          },
         };
       }
       return {
@@ -42,7 +45,10 @@ const reviewService = {
       );
       return {
         code: 200,
-        data: rate,
+        data: {
+          status: 200,
+          data: rate,
+        },
       };
     } catch (error) {
       console.log(error);
@@ -82,7 +88,11 @@ const reviewService = {
 
         return {
           code: 201,
-          data: newReview,
+          data: {
+            status: 201,
+
+            data: newReview,
+          },
         };
       }
 

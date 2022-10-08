@@ -16,13 +16,19 @@ module.exports = {
       if (checkUsername) {
         return {
           code: 400,
-          message: "Username already in use",
+          data: {
+            status: 400,
+            error: "Tên tài khoản đã được sử dụng",
+          },
         };
       }
       if (checkEmail) {
         return {
           code: 400,
-          message: "This email address is already in user",
+          data: {
+            stats: 400,
+            error: "Email đã được sử dụng",
+          },
         };
       } else {
         const salt = await bcrypt.genSalt(11);
@@ -64,7 +70,9 @@ module.exports = {
 
         return {
           code: 201,
-          data: newUser,
+          data: {
+            status: 201,
+          },
         };
       }
     } catch (error) {
@@ -72,6 +80,9 @@ module.exports = {
       await transaction.rollback();
       return {
         code: 500,
+        data: {
+          status: 500,
+        },
       };
     }
   },
@@ -85,7 +96,10 @@ module.exports = {
       if (!user) {
         return {
           code: 404,
-          message: "Username not found",
+          data: {
+            error: "Tên tài khoản không tồn tại",
+            status: 404,
+          },
         };
       }
 
@@ -94,7 +108,10 @@ module.exports = {
       if (!isValidPassword) {
         return {
           code: 404,
-          message: "Password not found",
+          data: {
+            error: "Mật khẩu không đúng",
+            status: 404
+          },
         };
       }
 
@@ -102,7 +119,10 @@ module.exports = {
         const { password, isActive, updatedAt, ...orthers } = user.dataValues;
         return {
           code: 200,
-          user: orthers,
+          data: {
+            status: 200,
+            data: orthers,
+          }
         };
       }
     } catch (error) {

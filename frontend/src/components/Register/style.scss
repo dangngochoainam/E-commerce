@@ -1,0 +1,77 @@
+.container__register {
+    h1,
+    label {
+        color: DodgerBlue;
+    }
+    h1 {
+        text-align: center;
+        font-size: 2rem;
+    }
+    /* Full-width input fields */
+    input[type="text"],
+    input[type="password"],
+    select {
+        width: 100%;
+        padding: 1.5rem;
+        margin: 0.5rem 0 0.5rem 0;
+        display: inline-block;
+        border: none;
+        width: 100%;
+        resize: vertical;
+        padding: 15px;
+        border-radius: 15px;
+        border: 0;
+        box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    input[type="text"]:focus,
+    input[type="password"]:focus,
+    select:focus {
+        outline: none;
+    }
+
+    hr {
+        border: 1px solid #f1f1f1;
+        margin-bottom: 25px;
+    }
+
+    /* Set a style for all buttons */
+    button {
+        background-color: #4caf50;
+        color: white;
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+        opacity: 0.9;
+    }
+
+    button:hover {
+        opacity: 1;
+    }
+
+    /* Extra styles for the cancel button */
+    .cancelbtn {
+        padding: 14px 20px;
+        background-color: #f44336;
+    }
+
+    /* Float cancel and signup buttons and add an equal width */
+    .signupbtn {
+        background-color: rgb(26, 148, 255);
+        width: 100%;
+        border-radius: 15px;
+        border: 0;
+        box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Add padding to container elements */
+    .container {
+        padding: 16px;
+    }
+
+    /* Clear floats */
+    .clearfix {
+    }
+}
