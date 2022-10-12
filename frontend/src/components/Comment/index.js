@@ -9,10 +9,10 @@ const Comment = ({ productId }) => {
   useEffect(() => {
     console.log("useEffect Comment");
     const getComments = async () => {
-      const data = await axiosClient.get(
+      const res = await axiosClient.get(
         `${endpoints.products}${productId}/comments`
       );
-      setComments(data);
+      setComments(res.data);
     };
     getComments();
   }, [productId]);
@@ -63,7 +63,6 @@ const Comment = ({ productId }) => {
               </div>
             </div>
           ))}
-
         </div>
       </div>
     </>

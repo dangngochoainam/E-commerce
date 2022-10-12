@@ -11,8 +11,8 @@ function Navbar() {
 
   useEffect(() => {
     const getAllCategories = async () => {
-      const data = await axiosClient.get(endpoints.categories);
-      setCategories(data);
+      const res = await axiosClient.get(endpoints.categories);
+      setCategories(res.data);
     };
     getAllCategories();
   }, []);
@@ -38,9 +38,7 @@ function Navbar() {
               key={category.id}
               className="capitalize py-2 px-3 text-[#4e4d53] hover:text-[#736d65] truncate"
             >
-              <Link to={`/categories/${category.id}`}>
-                {category.name}
-              </Link>
+              <Link to={`/categories/${category.id}`}>{category.name}</Link>
             </span>
           ))}
         </div>

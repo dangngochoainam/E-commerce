@@ -29,8 +29,12 @@ module.exports = {
 
   getAllProductByShopId: async (req, res) => {
     try {
-      const shopId = req.params.shopId;
-      const { code, data } = await productService.getAllProductByShopId(shopId);
+      let params = req.query;
+      params.page = params.page === undefined ? 1 : params.page;
+      params.shopId = req.params.shopId;
+
+      console.log(params);
+      const { code, data } = await productService.getAllProductByShopId(params);
       return res.status(code).json(data);
     } catch (error) {
       console.log(error);

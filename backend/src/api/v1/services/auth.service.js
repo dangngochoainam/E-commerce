@@ -89,6 +89,16 @@ module.exports = {
   login: async (username, password) => {
     try {
       const user = await _User.findOne({
+        attributes: [
+          "id",
+          "firstname",
+          "lastname",
+          "avatar",
+          "password",
+          "lastVisited",
+          "roles",
+          "status",
+        ],
         where: {
           username: username,
         },
@@ -110,19 +120,19 @@ module.exports = {
           code: 404,
           data: {
             error: "Mật khẩu không đúng",
-            status: 404
+            status: 404,
           },
         };
       }
 
       if (user && isValidPassword) {
-        const { password, isActive, updatedAt, ...orthers } = user.dataValues;
+        const { password, ...orthers } = user.dataValues;
         return {
           code: 200,
           data: {
             status: 200,
             data: orthers,
-          }
+          },
         };
       }
     } catch (error) {

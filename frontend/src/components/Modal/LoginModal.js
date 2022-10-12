@@ -1,15 +1,18 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { MdOutlineArrowDropDown } from "react-icons/md";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./style.scss";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
 import { axiosClient } from "../../lib/axios/axios.config";
 import { endpoints } from "../../configs/Apis";
+import { useDispatch } from "react-redux";
+import { loginSuccess, loginFail } from "../../lib/redux/authSlide";
 
 export default function Modal() {
   const [showModal, setShowModal] = React.useState(false);
+  const dispatch = useDispatch();
 
   const formik = useFormik({
     initialValues: {
@@ -22,13 +25,24 @@ export default function Modal() {
     }),
     onSubmit: async (values) => {
       try {
-        const res = await axiosClient.post(`${endpoints.login}`, values);
+        const { data: res } = await axiosClient.post(
+          `${endpoints.login}`,
+          values
+        );
+        console.log(res);
         if (res.status === 200) {
           toast.success("Đăng nhập thành công", { theme: "colored" });
+          dispatch(loginSuccess({ ...res.data, accessToken: res.accessToken }));
+          localStorage.setItem(
+            "auth",
+            JSON.stringify({ ...res.data, accessToken: res.accessToken })
+          );
+
           setShowModal(false);
         }
-        console.log(res);
       } catch (error) {
+        console.log(error);
+        dispatch(loginFail());
         toast.error(error.response.data.error, { theme: "colored" });
       }
       setShowModal(false);

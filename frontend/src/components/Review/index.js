@@ -10,12 +10,12 @@ const Review = ({ rate, productId }) => {
   useEffect(() => {
     console.log("useEffect Review");
     const countRateOfProduct = async () => {
-      const data = await axiosClient.get(
+      const res = await axiosClient.get(
         `${endpoints.reviews}rateOfProduct/${productId}`
       );
 
-      const totalRate = data.reduce((acc, item) => acc + item.rateCount, 0);
-      setRates({ ...data, totalRate });
+      const totalRate = res.data.reduce((acc, item) => acc + item.rateCount, 0);
+      setRates({ ...res.data, totalRate });
     };
     countRateOfProduct();
   }, [productId]);
@@ -96,9 +96,6 @@ const Review = ({ rate, productId }) => {
                     <AiFillStar color="rgb(253, 216, 54)" />
                   </div>
 
-
-
-
                   <div
                     className={`review-rating__detail--process h-1 w-32 bg-gray-200 mr-2 rounded-sm after:w-[${parseInt(
                       ((rates["0"]?.rateCount || 0) / rates.totalRate) * 100
@@ -112,9 +109,6 @@ const Review = ({ rate, productId }) => {
                     className={`review-rating__detail--process h-1 w-32 bg-gray-200 mr-2 rounded-sm ${percentTailwind[0]}`}
                   ></div>
 
-
-
-
                   <span>{rates["0"]?.rateCount || 0}</span>
                 </div>
                 <div className="flex items-center">
@@ -125,8 +119,6 @@ const Review = ({ rate, productId }) => {
                     <AiFillStar color="rgb(253, 216, 54)" />
                     <AiFillStar />
                   </div>
-
-
 
                   <div
                     className={`review-rating__detail--process h-1 w-32 bg-gray-200 mr-2 rounded-sm after:w-[${parseInt(
@@ -141,8 +133,6 @@ const Review = ({ rate, productId }) => {
                     className={`review-rating__detail--process h-1 w-32 bg-gray-200 mr-2 rounded-sm ${percentTailwind[1]}`}
                   ></div>
 
-
-
                   <span>{rates["1"]?.rateCount || 0}</span>
                 </div>
                 <div className="flex items-center">
@@ -153,8 +143,6 @@ const Review = ({ rate, productId }) => {
                     <AiFillStar />
                     <AiFillStar />
                   </div>
-
-
 
                   <div
                     className={`review-rating__detail--process h-1 w-32 bg-gray-200 mr-2 rounded-sm after:w-[${parseInt(
@@ -169,8 +157,6 @@ const Review = ({ rate, productId }) => {
                     className={`review-rating__detail--process h-1 w-32 bg-gray-200 mr-2 rounded-sm ${percentTailwind[2]}`}
                   ></div>
 
-
-
                   <span>{rates["2"]?.rateCount || 0}</span>
                 </div>
                 <div className="flex items-center">
@@ -181,8 +167,6 @@ const Review = ({ rate, productId }) => {
                     <AiFillStar />
                     <AiFillStar />
                   </div>
-
-
 
                   <div
                     className={`review-rating__detail--process h-1 w-32 bg-gray-200 mr-2 rounded-sm after:w-[${parseInt(
@@ -197,8 +181,6 @@ const Review = ({ rate, productId }) => {
                     className={`review-rating__detail--process h-1 w-32 bg-gray-200 mr-2 rounded-sm ${percentTailwind[3]}`}
                   ></div>
 
-
-
                   <span>{rates["3"]?.rateCount || 0}</span>
                 </div>
                 <div className="flex items-center">
@@ -209,8 +191,6 @@ const Review = ({ rate, productId }) => {
                     <AiFillStar />
                     <AiFillStar />
                   </div>
-
-
 
                   <div
                     className={`review-rating__detail--process h-1 w-32 bg-gray-200 mr-2 rounded-sm after:w-[${parseInt(
@@ -224,7 +204,6 @@ const Review = ({ rate, productId }) => {
                   <div
                     className={`review-rating__detail--process h-1 w-32 bg-gray-200 mr-2 rounded-sm ${percentTailwind[4]}`}
                   ></div>
-
 
                   <span>{rates["4"]?.rateCount || 0}</span>
                 </div>

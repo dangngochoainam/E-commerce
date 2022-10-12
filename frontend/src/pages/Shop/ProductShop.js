@@ -1,43 +1,30 @@
 import React, { useEffect, useState } from "react";
-import "./style.scss";
+import { endpoints } from "../../configs/Apis";
+import { axiosClient } from "../../lib/axios/axios.config";
 import { AiFillStar } from "react-icons/ai";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import queryString from "query-string";
-import { axiosClient } from "../../lib/axios/axios.config";
-import { endpoints } from "../../configs/Apis";
 import ReactPaginate from "react-paginate";
-import SideBar from "../../layouts/Sidebar/SideBar";
-const ListProduct = () => {
-  const [products, setProducts] = useState([]);
-  const navigate = useNavigate();
-  let location = useLocation();
-  let params = queryString.parse(location.search);
-  const categoryId = useParams();
+import Brand from "../../components/Brand";
 
-  const fetchProducts = async (params) => {
-    const res = await axiosClient.get(endpoints.products, {
+const ProductShop = () => {
+  const { shopId } = useParams();
+  const [products, setProducts] = useState([]);
+  const location = useLocation();
+  const navigate = useNavigate();
+  let params = queryString.parse(location.search);
+
+  const fetchProducts = async (shopId, params) => {
+    const res = await axiosClient.get(`${endpoints.shop}${shopId}/products`, {
       params: {
         kw: params.kw ? params.kw : null,
         sortBy: params.sortBy ? params.sortBy : null,
         order: params.order ? params.order : null,
-        cate: categoryId.hasOwnProperty("categoryId")
-          ? categoryId.categoryId
-          : null,
         page: params.page ? params.page : 1,
       },
     });
     setProducts(res.data);
   };
-
-  useEffect(() => {
-    console.log("useEffect in ListProduct");
-
-    try {
-      fetchProducts(params);
-    } catch (error) {
-      console.log(error);
-    }
-  }, [location]);
 
   const handlePageClick = async (data) => {
     let url = location.search.split("&");
@@ -55,9 +42,15 @@ const ListProduct = () => {
     navigate(`${location.pathname}${url}`);
   };
 
+  useEffect(() => {
+    fetchProducts(shopId, params);
+    console.log("useEffect in Shop");
+  }, [location]);
+
   return (
     <>
-      <section className="container__products">
+      <Brand shopId={shopId} layout="horizontal" />
+      <div className="container__products">
         {location.pathname === "/" || (
           <div className="product__filter px-5 h-12 flex items-center border-b border-[light-gray]">
             <ul className="flex">
@@ -104,58 +97,52 @@ const ListProduct = () => {
           </div>
         )}
 
-        <div className="flex">
-          <div>
-            <SideBar />
-          </div>
-          <div className="flex flex-wrap grow">
-            {products.products?.map((p) => (
-              <div
-                key={p.id}
-                className="flex flex-col bg-white w-[20%] p-3 mb-3 hover:shadow-product"
-              >
-                <Link to={`/${p.id}`}>
-                  <img
-                    className="w-40 h-44 m-auto"
-                    src={p.image}
-                    alt="Ảnh sản phẩm"
-                  />
+        <div className="flex flex-wrap">
+          {products.products?.map((p) => (
+            <div
+              key={p.id}
+              className="flex flex-col bg-white w-[20%] p-3 mb-3 hover:shadow-product"
+            >
+              <Link to={`/${p.id}`}>
+                <img
+                  className="w-40 h-44 m-auto"
+                  src={p.image}
+                  alt="Ảnh sản phẩm"
+                />
 
-                  <div className="grow flex flex-col px-2 py-2">
-                    <h4 className="item__product-name leading-6 h-12 pb-3 my-2 capitalize">
-                      {p.name}
-                    </h4>
-                    <div className=" grow flex items-center h-4 pt-1">
-                      <div className="flex pr-1">
-                        <AiFillStar color="rgb(253, 216, 54)" />
-                        <AiFillStar color="rgb(253, 216, 54)" />
-                        <AiFillStar color="rgb(253, 216, 54)" />
-                        <AiFillStar color="rgb(253, 216, 54)" />
-                        <AiFillStar />
-                      </div>
-                      <div className="text-xs border-l border-gray-400 pl-1 text-light-gray">
-                        Đã bán 1
-                      </div>
+                <div className="grow flex flex-col px-2 py-2">
+                  <h4 className="item__product-name leading-6 h-12 pb-3 my-2 capitalize">
+                    {p.name}
+                  </h4>
+                  <div className=" grow flex items-center h-4 pt-1">
+                    <div className="flex pr-1">
+                      <AiFillStar color="rgb(253, 216, 54)" />
+                      <AiFillStar color="rgb(253, 216, 54)" />
+                      <AiFillStar color="rgb(253, 216, 54)" />
+                      <AiFillStar color="rgb(253, 216, 54)" />
+                      <AiFillStar />
                     </div>
-                    <div className="pt-2 flex items-center">
-                      <span className="text-price-color pr-1">
-                        <b>
-                          {p.price} <span className="underline">đ</span>
-                        </b>
-                      </span>
-                      <span className="text-promotion-color text-xs">
-                        <b>
-                          <em>-32%</em>
-                        </b>
-                      </span>
+                    <div className="text-xs border-l border-gray-400 pl-1 text-light-gray">
+                      Đã bán 1
                     </div>
                   </div>
-                </Link>
-              </div>
-            ))}
-          </div>
+                  <div className="pt-2 flex items-center">
+                    <span className="text-price-color pr-1">
+                      <b>
+                        {p.price} <span className="underline">đ</span>
+                      </b>
+                    </span>
+                    <span className="text-promotion-color text-xs">
+                      <b>
+                        <em>-32%</em>
+                      </b>
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            </div>
+          ))}
         </div>
-
         <ReactPaginate
           previousLabel={"Trước"}
           nextLabel={"Sau"}
@@ -177,9 +164,9 @@ const ListProduct = () => {
           breakLinkClassName={"page-link"}
           activeClassName={"active"}
         />
-      </section>
+      </div>
     </>
   );
 };
 
-export default ListProduct;
+export default ProductShop;

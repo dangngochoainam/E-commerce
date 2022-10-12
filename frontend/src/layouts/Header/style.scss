@@ -1,0 +1,24 @@
+.header {
+    .sub__nav {
+        display: none;
+        position: absolute;
+        width: 15rem;
+        top: 100%;
+        transform: translateX(-30%);
+        background-color: white;
+        color: black;
+        padding: 10px 15px;
+        margin: 0;
+        text-align: left;
+    }
+    .sub__item {
+        padding: 5px 7.5px;
+        cursor: pointer;
+    }
+    .sub__item:hover {
+        background-color: whitesmoke;
+    }
+    .isLogin:hover > .sub__nav {
+        display: block;
+    }
+}

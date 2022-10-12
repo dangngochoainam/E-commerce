@@ -11,6 +11,9 @@ module.exports = (sequelize, DataTypes) => {
         max: 5,
       },
     },
+    image: {
+      type: DataTypes.STRING,
+    },
     description: {
       type: DataTypes.TEXT,
     },

@@ -52,7 +52,7 @@ const authController = {
       const { username, password } = req.body;
 
       const { code, data } = await authService.login(username, password);
-      if (data.data === undefined) {
+      if (data.status === 404) {
         return res.status(code).json(data);
       }
 
@@ -68,7 +68,12 @@ const authController = {
           sameSite: "strict",
         });
       }
-      return res.status(code).json({ data, accessToken });
+      return res.status(code).json({
+        data: {
+          ...data,
+          accessToken,
+        },
+      });
     } catch (error) {
       console.log(error);
       res.status(500).json(error);
@@ -88,7 +93,9 @@ const authController = {
 
       user = await userService.getUserByID(user.id);
       const newAccessToken = authController.generateAccessToken(user.data.user);
-      const newRefreshToken = authController.generateRefreshToken(user.data.user);
+      const newRefreshToken = authController.generateRefreshToken(
+        user.data.user
+      );
       refreshTokens.push(newRefreshToken);
 
       res.cookie("refreshToken", newRefreshToken, {
@@ -98,7 +105,9 @@ const authController = {
         sameSite: "strict",
       });
 
-      return res.status(200).json({ accessToken: newAccessToken });
+      return res.status(200).json({
+        data: { accessToken: newAccessToken },
+      });
     });
   },
   logout: (req, res) => {
@@ -107,7 +116,11 @@ const authController = {
       (token) => token !== req.cookies.refreshToken
     );
 
-    return res.status(200).json("Logged out !!");
+    return res.status(200).json({
+      data: {
+        status: 204,
+      },
+    });
   },
 };
 

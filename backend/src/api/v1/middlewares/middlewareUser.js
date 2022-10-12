@@ -13,13 +13,23 @@ const middlewareUser = {
       const accessToken = token.split(" ")[1];
 
       jwt.verify(accessToken, process.env.JWT_ACCESS_KEY, (err, user) => {
-        if (err) return res.status(403).json("Token is not valid");
+        if (err)
+          return res.status(403).json({
+            data: {
+              error: "Access token không hợp lệ",
+            },
+          });
 
         req.user = user;
         next();
       });
     } else {
-      return res.status(401).json("You're not authenticated");
+      return res.status(404).json({
+        data: {
+          status: 401,
+          error: "Bạn chưa đăng nhập tài khoản",
+        },
+      });
     }
   },
 
@@ -28,9 +38,12 @@ const middlewareUser = {
       if (req.user.roles.includes("STAFF")) {
         next();
       } else {
-        return res
-          .status(403)
-          .json("You're not authorized to access this resource_type");
+        return res.status(403).json({
+          data: {
+            status: 403,
+            error: "Bạn không có quyền sử dụng dịch vụ này",
+          },
+        });
       }
     });
   },
@@ -39,9 +52,12 @@ const middlewareUser = {
       if (req.user.roles.includes("ADMIN")) {
         next();
       } else {
-        return res
-          .status(403)
-          .json("You're not authorized to access this resource_type");
+        return res.status(403).json({
+          data: {
+            status: 403,
+            error: "Bạn không có quyền sử dụng dịch vụ này",
+          },
+        });
       }
     });
   },
@@ -50,16 +66,24 @@ const middlewareUser = {
     middlewareUser.verifyToken(req, res, async () => {
       if (req.user.roles.includes("SELLER")) {
         const { data } = await sellerService.getSellerByUserId(req.user.id);
-        if (data.isConfirm) {
-          req.sellerId = data.id;
+        if (data.data.isConfirm) {
+          req.sellerId = data.data.id;
           next();
         } else {
-          return res.status(400).json({ error: "Seller not confirmed" });
+          return res.status(400).json({
+            data: {
+              status: 400,
+              error: "Người bán chưa được phê duyệt",
+            },
+          });
         }
       } else {
-        return res
-          .status(403)
-          .json("You're not authorized to access this resource_type");
+        return res.status(403).json({
+          data: {
+            status: 403,
+            error: "Bạn không có quyền sử dụng dịch vụ này",
+          },
+        });
       }
     });
   },
@@ -70,16 +94,19 @@ const middlewareUser = {
         const { data, code } = await customerService.getCustomerByUserId(
           req.user.id
         );
-        if (data) {
-          req.customerId = data.id;
+        if (data.data) {
+          req.customerId = data.data.id;
           next();
         } else {
           return res.status(code).json();
         }
       } else {
-        return res
-          .status(403)
-          .json("You're not authorized to access this resource_type");
+        return res.status(403).json({
+          data: {
+            status: 403,
+            error: "Bạn không có quyền sử dụng dịch vụ này",
+          },
+        });
       }
     });
   },
@@ -95,14 +122,22 @@ const middlewareUser = {
       if (req.body.shopId !== undefined) shopId = req.body.shopId;
 
       const { data } = await shopService.getShopById(shopId);
-      if (data && data.sellerId === req.sellerId) {
+      if (data.data && data.data.sellerId === req.sellerId) {
         next();
-      } else if (data) {
-        return res
-          .status(403)
-          .json({ error: "You're not allowed CUD resources to this shop." });
+      } else if (data.data) {
+        return res.status(403).json({
+          data: {
+            status: 403,
+            error: "Bạn không có quyền sử dụng dịch vụ này",
+          },
+        });
       } else {
-        return res.status(404).json({ error: "Not found" });
+        return res.status(404).json({
+          data: {
+            status: 404,
+            error: "Không tìm thấy cửa hàng của bạn",
+          },
+        });
       }
     });
   },

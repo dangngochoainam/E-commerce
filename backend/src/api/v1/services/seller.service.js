@@ -1,5 +1,6 @@
 const db = require("../models");
 const _Seller = db.Seller;
+const _User = db.User;
 
 module.exports = {
   getSellerByUserId: async (userId) => {
@@ -32,6 +33,11 @@ module.exports = {
   getSellersUnConfirm: async () => {
     try {
       const sellers = await _Seller.findAll({
+        include: {
+          model: _User,
+          attributes: ["firstname", "lastname", "avatar"],
+        },
+
         where: {
           isConfirm: false,
         },
@@ -42,7 +48,6 @@ module.exports = {
           code: 200,
           data: {
             status: 200,
-
             data: sellers,
           },
         };

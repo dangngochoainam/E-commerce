@@ -50,6 +50,26 @@ const productService = {
       };
     }
   },
+  getProductById: async (productId) => {
+    try {
+      const product = await _Product.findByPk(productId);
+      return {
+        code: 200,
+        data: {
+          status: 200,
+          data: product,
+        },
+      };
+    } catch (error) {
+      return {
+        code: 500,
+        data: {
+          status: 500,
+          error,
+        },
+      };
+    }
+  },
 
   getAllProduct: async (params) => {
     try {
@@ -104,29 +124,6 @@ const productService = {
     }
   },
 
-  getAllProductByShopId: async (shopId) => {
-    try {
-      const products = await _Product.findAll({
-        where: {
-          shopId: shopId,
-        },
-      });
-      return {
-        code: 200,
-        data: {
-          status: 200,
-
-          data: products,
-        },
-      };
-    } catch (error) {
-      console.log(error);
-      return {
-        code: 500,
-      };
-    }
-  },
-
   getAllProductByOrderId: async (orderId) => {
     try {
       const orderDetails = await _OrderDetails.findAll({
@@ -152,35 +149,6 @@ const productService = {
           status: 200,
 
           data: products,
-        },
-      };
-    } catch (error) {
-      console.log(error);
-      return {
-        code: 500,
-      };
-    }
-  },
-
-  getProductById: async (productId) => {
-    try {
-      const product = await _Product.findByPk(productId);
-      if (product) {
-        return {
-          code: 200,
-          data: {
-            status: 200,
-
-            data: product,
-          },
-        };
-      }
-
-      return {
-        code: 404,
-        data: {
-          status: 404,
-          error: "Sản phẩm không tồn tại",
         },
       };
     } catch (error) {
@@ -218,6 +186,61 @@ const productService = {
       };
     }
   },
+
+  getAllProductByShopId: async (params) => {
+    try {
+      const { shopId, page, kw, fP, tP, sortBy, order, cate, subCate } = params;
+
+      let start;
+      if (page > 0) {
+        start = parseInt((page - 1) * process.env.PAGE_SIZE);
+      }
+
+      const products = await _Product.findAll({
+        where: {
+          [Op.and]: [
+            shopId ? { shopId: shopId } : {},
+            kw ? { name: { [Op.substring]: kw } } : {},
+            fP ? { price: { [Op.gte]: fP } } : {},
+            tP ? { price: { [Op.lte]: tP } } : {},
+            cate ? { categoryId: cate } : {},
+            subCate ? { subCategoryId: subCate } : {},
+          ],
+        },
+        offset: start,
+        limit: parseInt(process.env.PAGE_SIZE),
+        order: [sortBy ? [sortBy, order] : ["id", "asc"]],
+      });
+
+      const productAmount = await _Product.count({
+        where: {
+          [Op.and]: [
+            shopId ? { shopId: shopId } : {},
+            kw ? { name: { [Op.substring]: kw } } : {},
+            cate ? { categoryId: cate } : {},
+            subCate ? { subCategoryId: subCate } : {},
+            !kw && !cate && !subCate ? { isActive: true } : {},
+          ],
+        },
+      });
+
+      return {
+        code: 200,
+        data: {
+          status: 200,
+          data: {
+            products,
+            productAmount,
+          },
+        },
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        code: 500,
+      };
+    }
+  },
   editProduct: async ({ productId, newProduct }) => {
     try {
       if (newProduct.image) {
@@ -239,8 +262,8 @@ const productService = {
         return {
           code: 200,
           data: {
-            status: 200
-          }
+            status: 200,
+          },
         };
       } else {
         return {
@@ -262,8 +285,8 @@ const productService = {
         return {
           code: 204,
           data: {
-            status: 204
-          }
+            status: 204,
+          },
         };
       return {
         code: 400,

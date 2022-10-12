@@ -4,7 +4,8 @@ import * as Yup from "yup";
 import "./style.scss";
 import { axiosClient } from "../../lib/axios/axios.config";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const regexEmail =
   /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -12,6 +13,12 @@ const regexEmail =
 const Register = () => {
   const [avatar, setAvatar] = useState();
   const navigate = useNavigate();
+  const user = useSelector((state) => state.auth.currentUser);
+
+  if (user !== null) {
+    navigate("/");
+    toast.error("Bạn đã có tài khoản", { theme: "colored" });
+  }
 
   const formik = useFormik({
     initialValues: {
@@ -22,7 +29,6 @@ const Register = () => {
       password: "",
       passwordRepeat: "",
       roles: "",
-      // avatar: null,
     },
     validationSchema: Yup.object({
       firstname: Yup.string().required("Trường bắt buộc phải điền"),
@@ -39,7 +45,6 @@ const Register = () => {
         .max(15, "Mật khẩu tối đa 15 kí tự")
         .required("Trường bắt buộc phải điền"),
       roles: Yup.string().required("Trường bắt buộc phải điền"),
-      // avatar: Yup.mixed().required("Trường bắt buộc phải điền"),
     }),
     onSubmit: async (values) => {
       try {
@@ -64,7 +69,7 @@ const Register = () => {
         }
       } catch (error) {
         toast.error(error.response.data.error, {
-          theme: "colored"
+          theme: "colored",
         });
       }
     },

@@ -14,8 +14,8 @@ const ProductDetails = () => {
   useEffect(() => {
     console.log("useEffect ProductDetails");
     const getProduct = async (productId) => {
-      const data = await axiosClient.get(`${endpoints.products}${productId}`);
-      setProduct(data);
+      const res = await axiosClient.get(`${endpoints.products}${productId}`);
+      setProduct(res.data);
     };
 
     getProduct(productId);

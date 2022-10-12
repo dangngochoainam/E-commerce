@@ -28,4 +28,16 @@ module.exports = {
       };
     }
   },
+
+  // Từ khách hàng đăng ký thành người bán
+  registerSeller: async (userId) => {
+    try {
+
+    } catch (error) {
+      console.log(error);
+      return {
+        code: 500,
+      };
+    }
+  },
 };
