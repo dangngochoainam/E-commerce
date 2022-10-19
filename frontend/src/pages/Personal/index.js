@@ -21,6 +21,7 @@ const Personal = () => {
   };
   useEffect(() => {
     fetchUser();
+
     fetchShop();
   }, [userId]);
   return (
@@ -53,7 +54,7 @@ const Personal = () => {
             <p className="mb-3">
               Địa chỉ: <span>{user.address}</span>
             </p>
-            {user?.seller.isConfirm === false ? (
+            {user?.seller?.isConfirm === false ? (
               <p className="mb-3">Đang đợi nhân viên kiểm duyệt</p>
             ) : null}
 
@@ -64,7 +65,7 @@ const Personal = () => {
               </span>
             </h3>
 
-            {currentUser?.id === user?.id && user?.seller.isConfirm ? (
+            {currentUser?.id === user?.id && user?.seller?.isConfirm ? (
               <>
                 {user.roles === "CUSTOMER" && (
                   <div className="mt-5">

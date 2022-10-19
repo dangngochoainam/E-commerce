@@ -300,7 +300,7 @@ const data = {
       price: 37000000,
       description:
         "Thanh lịch, hiện đại trong từng đường nét.Thừa hưởng phong cách thiết kế tối giản, hiện đại của thế hệ iPhone 13 series, iPhone 14 Pro vẫn sở hữu cạnh viền vát phẳng và hệ thống camera được bố trí một cách hợp lý trong một cụm hình vuông. Giờ đây cụm tai thỏ quen thuộc đã được loại bỏ và thay thế vào đó là hình notch độc đáo dễ nhận diện.",
-      image: "",
+      image: "https://res.cloudinary.com/de5pwc5fq/image/upload/v1666019236/-9256-1665132615_oui8nx.jpg",
       unitInStock: 100,
       createdAt: "2022-09-16 18:59:59",
       updatedAt: "2022-09-16 19:59:59",

@@ -2,15 +2,25 @@ const db = require("../models");
 const _Review = db.Review;
 const _Product = db.Product;
 const _Shop = db.Shop;
+const _Customer = db.Customer;
 const { QueryTypes } = require("sequelize");
 
 const reviewService = {
   getReviewByProductId: async (productId) => {
     try {
       const reviews = await _Review.findAll({
+        include: {
+          model: _Customer,
+          attributes: ['id'],
+          include: {
+            model: db.User,
+            attributes: ["firstname", "lastname", "avatar"],
+          },
+        },
         where: {
           productId: productId,
         },
+        order: [["id", "DESC"]],
       });
       if (reviews) {
         return {
@@ -34,7 +44,7 @@ const reviewService = {
   countRateOfProduct: async (productId) => {
     try {
       const rate = await db.sequelize.query(
-        `select rate, count(*) as rateCount from review 
+        `select rate, count(*) as rateCount  from review 
         where productId = :productId 
         group by rate 
         order by rate desc`,

@@ -5,7 +5,7 @@ export const fetchCategory = async () => {
   return await axiosClient.get(`${endpoints.categories}`);
 };
 
-export const fetchSubCategory = async () => {
-    return await axiosClient.get(`${endpoints.categories}`);
+// export const fetchSubCategory = async () => {
+//     return await axiosClient.get(`${endpoints.categories}`);
 
-}
+// }

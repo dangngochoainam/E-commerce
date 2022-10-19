@@ -1,24 +1,45 @@
-import { Link, useParams } from "react-router-dom";
-import { AiFillStar } from "react-icons/ai";
-import { useEffect, useState } from "react";
-import Review from "../../components/Review";
-import Comment from "../../components/Comment";
-import { axiosClient } from "../../lib/axios/axios.config";
-import { endpoints } from "../../configs/Apis";
-import Brand from "../../components/Brand";
+import { Link, useParams } from 'react-router-dom';
+import { AiFillStar } from 'react-icons/ai';
+import { useEffect, useState } from 'react';
+import Review from '../../components/Review';
+import Comment from '../../components/Comment';
+import Brand from '../../components/Brand';
+import { formatMoney } from '../../utils';
+import { getProductByID } from '../../utils/apiProduct';
+import { useSelector } from 'react-redux';
 const ProductDetails = () => {
   const [quantity, setQuantity] = useState(1);
   const [product, setProduct] = useState();
   const { productId } = useParams();
+  const currentUser = useSelector((state) => state.auth.currentUser);
+  const fetchAPI = async () => {
+    const res = await getProductByID(productId);
+    setProduct(res.data);
+  };
 
+  const renderStar = (star) => {
+    let starJSX = [];
+    for (let i = 0; i < 5; i++) {
+      if (star > i) {
+        starJSX = [...starJSX, <AiFillStar color="rgb(253, 216, 54)" />];
+      } else {
+        starJSX = [...starJSX, <AiFillStar />];
+      }
+    }
+    return starJSX;
+  };
+
+  const addToCart = (product, quantity) => {
+    const cart = JSON.parse(localStorage.getItem(`${currentUser.id}`)) || [];
+    localStorage.setItem(
+      `${currentUser.id}`,
+      JSON.stringify([...cart, { ...product, quantity }])
+    );
+  };
+ 
   useEffect(() => {
-    console.log("useEffect ProductDetails");
-    const getProduct = async (productId) => {
-      const res = await axiosClient.get(`${endpoints.products}${productId}`);
-      setProduct(res.data);
-    };
-
-    getProduct(productId);
+    console.log('useEffect ProductDetails');
+    fetchAPI();
   }, []);
   return (
     <>
@@ -35,38 +56,36 @@ const ProductDetails = () => {
             <div className="line w-[1px] bg-gray-200 mx-4"></div>
             <div className=" text-character-color grow">
               <div className="header py-3">
-                <p>
+                {/* <p>
                   Tác giả:
                   <span className="text-blue-600 opacity-95 ml-2">
                     Eran Katz
                   </span>
-                </p>
+                </p> */}
                 <h1 className="text-xl capitalize text-character-color mb-2">
                   {product.name}
                 </h1>
                 <div className="product__review flex items-center text-sm">
                   <div className=" flex pr-1 review__rating">
-                    <AiFillStar color="rgb(253, 216, 54)" />
-                    <AiFillStar color="rgb(253, 216, 54)" />
-                    <AiFillStar color="rgb(253, 216, 54)" />
-                    <AiFillStar color="rgb(253, 216, 54)" />
-                    <AiFillStar />
+                    {renderStar(parseInt(product.rate))}
                   </div>
                   <span className="text-light-gray mb-">
-                    <Link to="/">(Xem 140 đánh giá)</Link>
+                    <Link to="/">(Xem {product.countReview} đánh giá)</Link>
                   </span>
                   <div className="mx-2 h-3 w-[0.5px] bg-light-gray"></div>
-                  <span className="text-light-gray">Đã bán 932</span>
+                  <span className="text-light-gray">
+                    Đã bán {product.totalProductSold || 0}
+                  </span>
                 </div>
               </div>
               <div className="body flex">
                 <div className="left w-8/12 mr-4">
                   <div className="px-4 pb-4 product__price flex h-20 bg-[#f3f3f3] items-end">
                     <p className="text-price-color text-3xl font-medium">
-                      {product.price}
+                      {formatMoney(product.price)}
                     </p>
                     <p className="text-light-gray line-through ml-2">
-                      {product.price} ₫
+                      {formatMoney(product.price)} ₫
                     </p>
                     <p className="text-promotion-color font-medium ml-2">-7%</p>
                   </div>
@@ -76,7 +95,14 @@ const ProductDetails = () => {
                       <div className="flex items-center">
                         <button
                           className="border border-gray-300 h-[26px]"
-                          onClick={() => setQuantity((current) => current - 1)}
+                          onClick={() =>
+                            setQuantity((current) => {
+                              if (current > 1) {
+                                return current - 1;
+                              }
+                              return current;
+                            })
+                          }
                         >
                           <img
                             className="w-full h-full object-cover"
@@ -87,12 +113,29 @@ const ProductDetails = () => {
                         <input
                           type="type"
                           value={quantity}
-                          onChange={(e) => setQuantity(e.target.value)}
+                          onChange={(e) =>
+                            setQuantity((current) => {
+                              if (
+                                parseInt(e.target.value) > 0 &&
+                                parseInt(e.target.value) <= product.unitInStock
+                              ) {
+                                return parseInt(e.target.value);
+                              }
+                              return 1;
+                            })
+                          }
                           className="text-center outline-none w-7 border border-gray-300 focus:border-blue-400 focus:shadow-product"
                         />
                         <button
                           className="border border-gray-300 h-[26px] "
-                          onClick={() => setQuantity((current) => current + 1)}
+                          onClick={() =>
+                            setQuantity((current) => {
+                              if (current < product.unitInStock) {
+                                return parseInt(current) + 1;
+                              }
+                              return current;
+                            })
+                          }
                         >
                           <img
                             className="w-full h-full object-cover"
@@ -105,14 +148,21 @@ const ProductDetails = () => {
                         {product.unitInStock} sản phẩm có sẵn
                       </span>
                     </div>
-                    <div className="mt-3 flex w-full text-white">
-                      <button className="w-3/4 bg-light-red  py-3 capitalize rounded-md outline-none mr-2">
-                        chọn mua
-                      </button>
-                      <button className="w-1/4 text-blue-600 border border-blue-600 rounded-md outline-none">
-                        Chat
-                      </button>
-                    </div>
+                    {currentUser ? (
+                      <div className="mt-3 flex w-full text-white">
+                        <button
+                          className="w-3/4 bg-light-red  py-3 capitalize rounded-md outline-none mr-2"
+                          onClick={() => addToCart(product, quantity)}
+                        >
+                          chọn mua
+                        </button>
+                        <button className="w-1/4 text-blue-600 border border-blue-600 rounded-md outline-none">
+                          Chat
+                        </button>
+                      </div>
+                    ) : (
+                      <p className="text-red-400 mt-5">Đăng nhập để mua hàng</p>
+                    )}
                   </div>
                 </div>
                 <Brand shopId={product.shopId} />
@@ -126,7 +176,7 @@ const ProductDetails = () => {
             <p className="text-character-color">{product.description}</p>
           </div>
           <div className="bg-main h-5"></div>
-          <Review rate={product.rate} productId={product.id} />
+          <Review product={product} />
           <div className="bg-main h-5"></div>
           <Comment productId={product.id} />
         </main>

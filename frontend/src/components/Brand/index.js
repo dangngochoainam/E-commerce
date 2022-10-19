@@ -28,7 +28,6 @@ const Brand = ({ shopId, layout }) => {
       shopId: shopId,
     });
     setUserOfShop(parseInt(res.data));
-    console.log(res.data);
   };
   useEffect(() => {
     console.log("useEffect Brand");

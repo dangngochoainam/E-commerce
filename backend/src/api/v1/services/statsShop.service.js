@@ -172,6 +172,7 @@ const statsShop = {
           type: QueryTypes.SELECT,
         }
       );
+      console.log(stats);
       return stats;
     } catch (error) {
       console.log(error);

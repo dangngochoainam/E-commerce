@@ -34,7 +34,7 @@ const Header = () => {
               <Link to="/">
                 <img
                   className="w-20 h-20"
-                  src="https://res.cloudinary.com/de5pwc5fq/image/upload/v1665066411/Ecommerce/icons8-soundfry_m6yzzw.svg"
+                  src="https://res.cloudinary.com/de5pwc5fq/image/upload/v1666019608/825b219385d46_k9zpfl.png"
                   alt="logo"
                 />
               </Link>
@@ -112,7 +112,7 @@ const Header = () => {
                 </div>
               </div>
               <div className="flex items-center">
-                <Link className=" flex items-center text-xs" to="/">
+                <Link className="flex items-center text-xs" to="/cart">
                   <span className="text-3xl mr-2">
                     <FiShoppingCart />
                   </span>

@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.DECIMAL,
         },
         discount: {
-            type: DataTypes.DOUBLE
+            type: DataTypes.FLOAT,
         }
     }, {
         timestamps: false

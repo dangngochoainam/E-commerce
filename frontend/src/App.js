@@ -17,6 +17,8 @@ import ListSeller from "./pages/Staff/ListSeller";
 import DashboardShop from "./pages/Shop/DashboardShop";
 import CreateShop from "./pages/Shop/CreateShop";
 import ManageProduct from "./pages/Shop/ManageProduct";
+import Search from "./pages/Search";
+import CompareProduct from "./components/CompareProduct";
 
 const App = () => {
   return (
@@ -27,7 +29,8 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Home />}>
               <Route index element={<LandingPage />} />
-              <Route path="search" element={<ListProduct />} />
+              <Route path="search" element={<Search />}>
+              </Route>
               <Route path="categories/:categoryId" element={<ListProduct />} />
             </Route>
             <Route path="/staff" element={<Staff />}>
@@ -44,6 +47,7 @@ const App = () => {
               </Route>
             </Route>
             <Route path="/:productId" element={<ProductDetails />}></Route>
+            <Route path='/compareProduct' element={<CompareProduct/>}/>
             <Route path="/cart" element={<Cart />}></Route>
             <Route path="/register" element={<Register />} />
             <Route path="*" element={<Error />} />

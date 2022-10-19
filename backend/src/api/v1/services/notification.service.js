@@ -73,9 +73,9 @@ module.exports = {
       }
 
       return {
-        code: 200,
+        code: 201,
         data: {
-          status: 200,
+          status: 201,
 
           data: notification,
         },

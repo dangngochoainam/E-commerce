@@ -14,6 +14,9 @@ module.exports = {
         where: {
           productId: productId,
         },
+        order: [
+          ["id", "DESC"],
+        ],
       });
       if (comments)
         return {

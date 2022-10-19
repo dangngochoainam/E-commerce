@@ -232,13 +232,13 @@ db.Product.belongsTo(db.Shop, {
 
 db.Shop.hasMany(db.Promotion, {
   foreignKey: {
-    allowNull: false,
+    allowNull: true,
   },
   onDelete: "CASCADE",
 });
 db.Promotion.belongsTo(db.Shop, {
   foreignKey: {
-    allowNull: false,
+    allowNull: true,
   },
   onDelete: "CASCADE",
 });
