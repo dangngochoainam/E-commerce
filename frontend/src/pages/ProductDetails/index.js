@@ -4,10 +4,14 @@ import { useEffect, useState } from 'react';
 import Review from '../../components/Review';
 import Comment from '../../components/Comment';
 import Brand from '../../components/Brand';
-import { formatMoney } from '../../utils';
+import { counterProductInCart, formatMoney } from '../../utils';
 import { getProductByID } from '../../utils/apiProduct';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
+import { countProduct } from '../../lib/redux/cartSlide';
+
 const ProductDetails = () => {
+  const dispatch = useDispatch();
   const [quantity, setQuantity] = useState(1);
   const [product, setProduct] = useState();
   const { productId } = useParams();
@@ -30,13 +34,34 @@ const ProductDetails = () => {
   };
 
   const addToCart = (product, quantity) => {
-    const cart = JSON.parse(localStorage.getItem(`${currentUser.id}`)) || [];
-    localStorage.setItem(
-      `${currentUser.id}`,
-      JSON.stringify([...cart, { ...product, quantity }])
+    if (quantity > product.unitInStock || quantity < 1) {
+      toast.error('Vui lòng nhập lại số lượng cần mua', {
+        theme: 'colored',
+      });
+      return;
+    }
+
+    const cart = JSON.parse(localStorage.getItem(`${currentUser.id}`)) || {};
+
+    if (cart[`${product.id}`]) {
+      cart[`${product.id}`].quantity += quantity;
+    } else {
+      cart[`${product.id}`] = { ...product, quantity };
+    }
+
+    localStorage.setItem(`${currentUser.id}`, JSON.stringify({ ...cart }));
+
+    dispatch(
+      countProduct(
+        counterProductInCart(
+          JSON.parse(localStorage.getItem(`${currentUser?.id}`)) || []
+        )
+      )
     );
+
+    toast.success('Thêm thành công', { theme: 'colored' });
   };
- 
+
   useEffect(() => {
     console.log('useEffect ProductDetails');
     fetchAPI();
@@ -113,17 +138,7 @@ const ProductDetails = () => {
                         <input
                           type="type"
                           value={quantity}
-                          onChange={(e) =>
-                            setQuantity((current) => {
-                              if (
-                                parseInt(e.target.value) > 0 &&
-                                parseInt(e.target.value) <= product.unitInStock
-                              ) {
-                                return parseInt(e.target.value);
-                              }
-                              return 1;
-                            })
-                          }
+                          onChange={(e) => setQuantity(e.target.value)}
                           className="text-center outline-none w-7 border border-gray-300 focus:border-blue-400 focus:shadow-product"
                         />
                         <button
@@ -152,7 +167,7 @@ const ProductDetails = () => {
                       <div className="mt-3 flex w-full text-white">
                         <button
                           className="w-3/4 bg-light-red  py-3 capitalize rounded-md outline-none mr-2"
-                          onClick={() => addToCart(product, quantity)}
+                          onClick={() => addToCart(product, parseInt(quantity))}
                         >
                           chọn mua
                         </button>

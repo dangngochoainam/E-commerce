@@ -3,7 +3,7 @@ import { authAxios } from "../../lib/axios/axios.config";
 import { endpoints } from "../../configs/Apis";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { Navigate, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 
 const ListSeller = () => {
   const [sellers, setSellers] = useState([]);
@@ -113,7 +113,7 @@ const ListSeller = () => {
             </tbody>
           </table>
         </div>
-        <div className="grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800">
+        {/* <div className="grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800">
           <span className="col-span-2"></span>
           <span className="flex col-span-4 mt-2 sm:mt-auto sm:justify-end">
             <nav aria-label="Table navigation">
@@ -136,7 +136,7 @@ const ListSeller = () => {
                     </svg>
                   </button>
                 </li>
-                <li>
+                 <li>
                   <button className="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
                     1
                   </button>
@@ -186,11 +186,11 @@ const ListSeller = () => {
                       ></path>
                     </svg>
                   </button>
-                </li>
+                </li> 
               </ul>
             </nav>
           </span>
-        </div>
+        </div> */}
       </div>
     </div>
   );

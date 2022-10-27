@@ -1,5 +1,5 @@
-const orderService = require("../services/order.service");
-const productService = require("../services/product.service");
+const orderService = require('../services/order.service');
+const productService = require('../services/product.service');
 
 module.exports = {
   // Thanh toán các sản phẩm chỉ thuộc về 1 shop
@@ -8,6 +8,17 @@ module.exports = {
     cart.customerId = req.customerId;
     try {
       const { code, data } = await orderService.buy({ order: cart });
+      return res.status(code).json(data);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json();
+    }
+  },
+
+  getOrderUnConfirm: async (req, res) => {
+    const shopId = req.body.shopId;
+    try {
+      const { code, data } = await orderService.getOrderUnConfirm(shopId);
       return res.status(code).json(data);
     } catch (error) {
       console.log(error);

@@ -1,18 +1,66 @@
-const dotenv = require('dotenv')
-dotenv.config()
-const app = require('./app')
+// const dotenv = require('dotenv')
+// dotenv.config()
 
-app.listen(process.env.PORT || 8081, (req, res) => {
-    console.log("Connected successfully !!")
-})
+// const app = require('./app')
 
-// const dotenv = require("dotenv");
-// dotenv.config();
-// const app = require("./app");
+// app.listen(process.env.PORT || 8081, (req, res) => {
+//     console.log("Connected successfully !!")
+// })
 
-// const http = require("http");
-// const server = http.createServer(app);
+const { Server } = require('socket.io');
 
-// server.listen(process.env.PORT, (req, res) => {
-//   console.log("Connected successfully !!");
-// });
+const dotenv = require('dotenv');
+dotenv.config();
+const app = require('./app');
+
+const http = require('http');
+const server = http.createServer(app);
+
+// Setup SOCKET.IO
+const io = new Server(server, {
+  /* options */
+});
+let onlineUsers = [];
+
+const addNewUser = (username, socketId) => {
+  !onlineUsers.some((user) => user.username === username) &&
+    onlineUsers.push({ username, socketId });
+};
+
+const removeUser = (socketId) => {
+  onlineUsers = onlineUsers.filter((user) => user.socketId !== socketId);
+};
+
+const getUser = (username) => {
+  return onlineUsers.find((user) => user.username === username);
+};
+
+io.on('connection', (socket) => {
+  socket.on('newUser', (username) => {
+    addNewUser(username, socket.id);
+  });
+
+  socket.on('sendNotification', ({ senderName, receiverName, type }) => {
+    const receiver = getUser(receiverName);
+    io.to(receiver.socketId).emit('getNotification', {
+      senderName,
+      type,
+    });
+  });
+
+  socket.on('sendText', ({ senderName, receiverName, text }) => {
+    const receiver = getUser(receiverName);
+    io.to(receiver.socketId).emit('getText', {
+      senderName,
+      text,
+    });
+  });
+
+  socket.on('disconnect', () => {
+    removeUser(socket.id);
+  });
+});
+
+server.listen(process.env.PORT, (req, res) => {
+  console.log('Connected successfully !!');
+});

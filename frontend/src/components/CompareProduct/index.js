@@ -1,8 +1,8 @@
-import { compareProduct } from "../../utils/apiProduct";
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { formatMoney } from "../../utils";
-import { FaStar } from "react-icons/fa";
+import { compareProduct } from '../../utils/apiProduct';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { formatMoney } from '../../utils';
+import { FaStar } from 'react-icons/fa';
 
 const CompareProduct = () => {
   const productCompare = useSelector((state) => state.productCompare.products);
@@ -13,7 +13,6 @@ const CompareProduct = () => {
         productCompare[0].id,
         productCompare[1].id
       );
-      console.log(res);
 
       if (res.status === 200) {
         setProducts(res.data);
@@ -60,16 +59,16 @@ const CompareProduct = () => {
                       <li>
                         <span className="text-light-gray">Giá: </span>
                         <span className="text-price-color font-bold">
-                          {formatMoney(product.price)}{" "}
+                          {formatMoney(product.price)}{' '}
                           <span className="underline"> đ</span>
                         </span>
                       </li>
                       <li className="flex items-center">
                         <span>Điểm đánh giá: </span>
                         <span className="font-bold ml-1">
-                          {" "}
+                          {' '}
                           {product.rate} / 5
-                        </span>{" "}
+                        </span>{' '}
                         <span className="flex ml-2">
                           <FaStar color="rgb(253, 216, 54)" />
                           <FaStar color="rgb(253, 216, 54)" />
@@ -87,19 +86,23 @@ const CompareProduct = () => {
                       <li>
                         <span>Số lượng đã bán: </span>
                         <span className="font-bold">
-                          {product.totalProductSold}
+                          {product.totalProductSold || 0}
                         </span>
+                      </li>
+                      <li>
+                        <span>Số lượng đánh giá: </span>
+                        <span className="font-bold">{product.countReview}</span>
                       </li>
                     </ul>
                     <ul className="">
                       <li>
                         <span>Tên cửa hàng: </span>
-                        <span className="font-bold">{product.shopName}</span>
+                        <span className="font-bold">{product.shop.name}</span>
                       </li>
                       <li className="flex items-center">
                         <span>Điểm đánh giá của cửa hàng: </span>
                         <span className="font-bold ml-1">
-                          {product.shopRate} / 5
+                          {product.shop.rate} / 5
                         </span>
                         <span className="flex ml-2">
                           <FaStar color="rgb(253, 216, 54)" />

@@ -1,6 +1,6 @@
-const jwt = require("jsonwebtoken");
-const authService = require("../services/auth.service");
-const userService = require("../services/user.service");
+const jwt = require('jsonwebtoken');
+const authService = require('../services/auth.service');
+const userService = require('../services/user.service');
 
 let refreshTokens = [];
 
@@ -9,11 +9,12 @@ const authController = {
     return jwt.sign(
       {
         id: user.id,
-        roles: user.roles.split(","),
+        roles: user.roles.split(','),
       },
       process.env.JWT_ACCESS_KEY,
       {
-        expiresIn: "0.5h",
+        // expiresIn: "0.5h",
+        expiresIn: '30 days',
       }
     );
   },
@@ -22,11 +23,11 @@ const authController = {
     return jwt.sign(
       {
         id: user.id,
-        roles: user.roles.split(","),
+        roles: user.roles.split(','),
       },
       process.env.JWT_REFRESH_KEY,
       {
-        expiresIn: "30 days",
+        expiresIn: '30 days',
       }
     );
   },
@@ -61,11 +62,11 @@ const authController = {
 
       if (refreshToken) {
         refreshTokens.push(refreshToken);
-        res.cookie("refreshToken", refreshToken, {
+        res.cookie('refreshToken', refreshToken, {
           httpOnly: true,
           secure: false,
-          path: "/",
-          sameSite: "strict",
+          path: '/',
+          sameSite: 'strict',
         });
       }
       return res.status(code).json({
@@ -85,7 +86,7 @@ const authController = {
 
     if (!refreshToken) return res.status(401).json("You're not authenticated");
     if (!refreshTokens.includes(refreshToken))
-      return res.status(401).json("Refresh token is invalid");
+      return res.status(401).json('Refresh token is invalid');
 
     jwt.verify(refreshToken, process.env.JWT_REFRESH_KEY, async (err, user) => {
       if (err) console.log(err);
@@ -98,11 +99,11 @@ const authController = {
       );
       refreshTokens.push(newRefreshToken);
 
-      res.cookie("refreshToken", newRefreshToken, {
+      res.cookie('refreshToken', newRefreshToken, {
         httpOnly: true,
         secure: false,
-        path: "/",
-        sameSite: "strict",
+        path: '/',
+        sameSite: 'strict',
       });
 
       return res.status(200).json({
@@ -111,7 +112,7 @@ const authController = {
     });
   },
   logout: (req, res) => {
-    res.clearCookie("refreshToken");
+    res.clearCookie('refreshToken');
     refreshTokens = refreshTokens.filter(
       (token) => token !== req.cookies.refreshToken
     );

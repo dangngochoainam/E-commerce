@@ -1,5 +1,6 @@
-const db = require("../models");
-const productService = require("./product.service");
+const db = require('../models');
+const { Op } = require('sequelize');
+const productService = require('./product.service');
 const _Order = db.Order;
 const _OrderDetails = db.OrderDetails;
 const _Product = db.Product;
@@ -45,7 +46,7 @@ const orderService = {
         products[i].unitOnOrder += items[i].quantity;
       }
 
-      if (!check) throw "The product is out of stock";
+      if (!check) throw 'The product is out of stock';
 
       products.forEach(async (product) => {
         await _Product.update(
@@ -150,29 +151,62 @@ const orderService = {
   //   }
   // },
 
-  confirmOrder: async ({ orderId, orderDetailIds, action }) => {
+  getOrderUnConfirm: async (shopId) => {
+    try {
+      const orders = await _Order.findAll({
+        include: {
+          model: db.Customer,
+          include: {
+            model: db.User,
+          },
+        },
+        where: {
+          [Op.and]: [{ shopId: shopId }, { isConfirm: false }],
+        },
+      });
+
+      return {
+        code: 200,
+        data: {
+          status: 200,
+          data: orders,
+        },
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        code: 500,
+        data: {
+          status: 500,
+        },
+      };
+    }
+  },
+
+  confirmOrder: async ({ orderId, action }) => {
     const transaction = await db.sequelize.transaction();
     try {
-      const checkIsValid = await _Order.findByPk(orderId);
+      const order = await _Order.findByPk(orderId);
 
-      if (checkIsValid.isConfirm) {
+      if (order.isConfirm) {
         return {
           code: 400,
           data: {
             status: 400,
 
-            error: "Đơn hàng đã được thành toán thành công",
+            error: 'Đơn hàng đã được thành toán thành công',
           },
         };
       }
 
       const orderDetails = await _OrderDetails.findAll({
-        attributes: ["quantity", "productId"],
+        attributes: ['quantity', 'productId'],
         where: {
-          id: orderDetailIds,
+          orderId: order.id,
         },
       });
-      if (action === "DONE") {
+
+      if (action === 'DONE') {
         orderDetails.forEach(async (item) => {
           await orderService.handleInventory({
             productId: item.productId,
@@ -199,6 +233,7 @@ const orderService = {
             status: 200,
           },
         };
+        // Nếu action = 'CANCEL'
       } else {
         orderDetails.forEach(async (item) => {
           await orderService.handleInventory({
@@ -232,8 +267,9 @@ const orderService = {
   handleInventory: async ({ productId, quantity, transaction, action }) => {
     let product = await _Product.findByPk(productId);
 
-    if (action === "DONE") {
+    if (action === 'DONE') {
       product.unitOnOrder -= quantity;
+      // Xử lí hủy đơn hàng
     } else {
       product.unitOnOrder -= quantity;
       product.unitInStock += quantity;

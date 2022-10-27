@@ -29,7 +29,7 @@ const statsAdmin = {
     }
     try {
       switch (type) {
-        case "TOTAL PRODUCT":
+        case "TOTAL_PRODUCT":
           stats = await statsAdmin.statsByTotalProduct(
             shopId,
             month,
@@ -84,7 +84,7 @@ const statsAdmin = {
   ) => {
     try {
       const stats = await db.sequelize.query(
-        `select s.name as 'Ten shop', sum(d.quantity) as 'Tong san pham ban duoc', sum(d.quantity * d.unitPrice) as 'Doanh thu'
+        `select s.name as 'name', sum(d.quantity) as 'quantity', sum(d.quantity * d.unitPrice) as 'revenue'
       from ecommerce_db.order_details as d, ecommerce_db.product as p, ecommerce_db.order as o, ecommerce_db.shop s 
       where d.productId = p.id and o.id = d.orderId and p.shopId = s.id ${
         shopId > 0 ? "and p.shopId = :shopId" : ""
@@ -95,7 +95,7 @@ const statsAdmin = {
         } ${year > 0 ? "and YEAR(o.createdAt) = :year" : ""} ${
           date ? "and DATE(o.createdAt) = DATE(:date)" : ""
         }
-      group by p.id
+      group by s.id
       order by sum(d.quantity * d.unitPrice) desc`,
         {
           replacements: {

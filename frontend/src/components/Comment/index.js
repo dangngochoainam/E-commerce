@@ -3,6 +3,9 @@ import { useSelector } from "react-redux";
 import { addComment, fetchComment } from "../../utils/apiComment";
 import { toast } from "react-toastify";
 
+
+
+
 const Comment = ({ productId }) => {
   const [inputComment, setInputComment] = useState("");
   const [comments, setComments] = useState([]);

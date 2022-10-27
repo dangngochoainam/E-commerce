@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { toast } from "react-toastify";
-import { AiFillDelete } from "react-icons/ai";
-import { GrEdit } from "react-icons/gr";
-import { fetchProductOfShop } from "../../utils/apiShop";
-import AddProductModal from "../../components/Modal/AddProductModal";
-import ReactPaginate from "react-paginate";
-import queryString from "query-string";
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { AiFillDelete } from 'react-icons/ai';
+import { fetchProductOfShop } from '../../utils/apiShop';
+import AddProductModal from '../../components/Modal/AddProductModal';
+import ReactPaginate from 'react-paginate';
+import queryString from 'query-string';
+import { deleteProduct } from '../../utils/apiProduct';
+import { useSelector } from 'react-redux';
+import EditProductModal from '../../components/Modal/EditProductModal';
 
 const ManageProduct = () => {
   const { shopId } = useParams();
@@ -14,6 +16,7 @@ const ManageProduct = () => {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   let params = queryString.parse(location.search);
+  const currentUser = useSelector((state) => state.auth.currentUser);
 
   const fetchAPI = async () => {
     try {
@@ -30,19 +33,37 @@ const ManageProduct = () => {
   }, [location]);
 
   const handlePageClick = async (data) => {
-    let url = location.search.split("&");
+    let url = location.search.split('&');
 
-    if (url[0] === "" || (url.length === 1 && url[0].includes("page"))) {
+    if (url[0] === '' || (url.length === 1 && url[0].includes('page'))) {
       url = `?page=${data.selected + 1}`;
-    } else if (url.length > 1 && url[url.length - 1].includes("page")) {
+    } else if (url.length > 1 && url[url.length - 1].includes('page')) {
       url[url.length - 1] = `page=${data.selected + 1}`;
-      url = url.join("&");
+      url = url.join('&');
     } else {
       url.push(`page=${data.selected + 1}`);
-      url = url.join("&");
+      url = url.join('&');
     }
 
     navigate(`${location.pathname}${url}`);
+  };
+
+  const handleDelete = async (currentUser, productId) => {
+    try {
+      const res = await deleteProduct(currentUser, productId);
+      if (res.status === 204) {
+        toast.success('Xóa sản phẩm thành công', { theme: 'colored' });
+        let temp = { ...products };
+
+        temp.products = temp.products.filter(
+          (product) => product.id !== productId
+        );
+
+        setProducts(temp);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -68,69 +89,71 @@ const ManageProduct = () => {
             <tbody className="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
               {products.products &&
                 products.products.map((product) => (
-                  <>
-                    <tr
-                      key={product.id}
-                      className="text-gray-700 dark:text-gray-400 w-full"
-                    >
-                      <td className="px-1 py-2">{product.id}</td>
-                      <td className="px-1 py-2 text-xs">
-                        <span className="whitespace-nowrap capitalize px-2 py-1 font-semibold leading-tight text-blue-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
-                          {product.name}
-                        </span>
-                      </td>
-                      <td className="px-1 py-2 text-sm font-medium text-price-color">
-                        {String(
-                          product.price
-                            .toString()
-                            .replace(/(.)(?=(\d{3})+$)/g, "$1,")
-                        )}{" "}
-                        <span class="underline mt-1">đ</span>
-                      </td>
+                  <tr
+                    key={product.id}
+                    className="text-gray-700 dark:text-gray-400 w-full"
+                  >
+                    <td className="px-1 py-2">{product.id}</td>
+                    <td className="px-1 py-2 text-xs">
+                      <span className="whitespace-nowrap capitalize px-2 py-1 font-semibold leading-tight text-blue-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
+                        {product.name}
+                      </span>
+                    </td>
+                    <td className="px-1 py-2 text-sm font-medium text-price-color">
+                      {String(
+                        product.price
+                          .toString()
+                          .replace(/(.)(?=(\d{3})+$)/g, '$1,')
+                      )}{' '}
+                      <span className="underline mt-1">đ</span>
+                    </td>
 
-                      <td className="px-1 py-2 text-sm text-center font-bold">
-                        {product.rate}
-                      </td>
-                      <td className="px-1 py-2 text-sm text-center font-bold">
-                        {product.unitInStock}
-                      </td>
+                    <td className="px-1 py-2 text-sm text-center font-bold">
+                      {product.rate}
+                    </td>
+                    <td className="px-1 py-2 text-sm text-center font-bold">
+                      {product.unitInStock}
+                    </td>
 
-                      <td className="px-1 py-2 text-sm ">
-                        <button className="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                          <GrEdit className="text-white" />
-                        </button>
-                      </td>
-                      <td className="px-1 py-2 text-sm">
-                        <button className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
-                          <AiFillDelete />
-                        </button>
-                      </td>
-                    </tr>
-                  </>
+                    <td className="px-1 py-2 text-sm ">
+                      <EditProductModal
+                        product={product}
+                        setProduct={fetchAPI}
+                      />
+                    </td>
+                    <td className="px-1 py-2 text-sm">
+                      <button
+                        onClick={() => handleDelete(currentUser, product.id)}
+                        className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
+                      >
+                        <AiFillDelete />
+                      </button>
+                    </td>
+                  </tr>
                 ))}
             </tbody>
           </table>
         </div>
         <ReactPaginate
-          previousLabel={"Trước"}
-          nextLabel={"Sau"}
-          breakLabel={"..."}
+          previousLabel={'Trước'}
+          nextLabel={'Sau'}
+          breakLabel={'...'}
           pageCount={
             products.productAmount ? Math.ceil(products.productAmount / 2) : 0
           }
           marginPagesDisplayed={2}
           pageRangeDisplayed={3}
           onPageChange={handlePageClick}
-          containerClassName={"pagination justify-content-center"}
-          pageClassName={"page-item"}
-          pageLinkClassName={"page-link"}
-          previousClassName={"page-item"}
-          previousLinkClassName={"page-link"}
-          nextClassName={"page-item"}
-          nextLinkClassName={"page-link"}
-          breakClassName={"page-item"}
-          breakLinkClassName={"page-link"}
-          activeClassName={"active"}
+          containerClassName={'pagination justify-content-center'}
+          pageClassName={'page-item'}
+          pageLinkClassName={'page-link'}
+          previousClassName={'page-item'}
+          previousLinkClassName={'page-link'}
+          nextClassName={'page-item'}
+          nextLinkClassName={'page-link'}
+          breakClassName={'page-item'}
+          breakLinkClassName={'page-link'}
+          activeClassName={'active'}
         />
         {/* <div className="grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800">
           <span className="col-span-2"></span>

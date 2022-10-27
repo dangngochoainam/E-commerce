@@ -1,14 +1,16 @@
-import React, { useMemo } from "react";
-import { MdOutlineArrowDropDown } from "react-icons/md";
-import { Link, useNavigate } from "react-router-dom";
-import "./style.scss";
-import { useFormik } from "formik";
-import * as Yup from "yup";
-import { toast } from "react-toastify";
-import { axiosClient } from "../../lib/axios/axios.config";
-import { endpoints } from "../../configs/Apis";
-import { useDispatch } from "react-redux";
-import { loginSuccess, loginFail } from "../../lib/redux/authSlide";
+import React, { useMemo } from 'react';
+import { MdOutlineArrowDropDown } from 'react-icons/md';
+import { Link, useNavigate } from 'react-router-dom';
+import './style.scss';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+import { toast } from 'react-toastify';
+import { axiosClient } from '../../lib/axios/axios.config';
+import { endpoints } from '../../configs/Apis';
+import { useDispatch } from 'react-redux';
+import { loginSuccess, loginFail } from '../../lib/redux/authSlide';
+import { countProduct } from '../../lib/redux/cartSlide';
+import { counterProductInCart } from '../../utils';
 
 export default function Modal() {
   const [showModal, setShowModal] = React.useState(false);
@@ -16,12 +18,12 @@ export default function Modal() {
 
   const formik = useFormik({
     initialValues: {
-      username: "",
-      password: "",
+      username: '',
+      password: '',
     },
     validationSchema: Yup.object({
-      username: Yup.string().required("Trường bắt buộc phải điền"),
-      password: Yup.string().required("Trường bắt buộc phải điền"),
+      username: Yup.string().required('Trường bắt buộc phải điền'),
+      password: Yup.string().required('Trường bắt buộc phải điền'),
     }),
     onSubmit: async (values) => {
       try {
@@ -29,13 +31,21 @@ export default function Modal() {
           `${endpoints.login}`,
           values
         );
-        console.log(res);
         if (res.status === 200) {
-          toast.success("Đăng nhập thành công", { theme: "colored" });
+          toast.success('Đăng nhập thành công', { theme: 'colored' });
           dispatch(loginSuccess({ ...res.data, accessToken: res.accessToken }));
           localStorage.setItem(
-            "auth",
+            'auth',
             JSON.stringify({ ...res.data, accessToken: res.accessToken })
+          );
+
+
+          dispatch(
+            countProduct(
+              counterProductInCart(
+                JSON.parse(localStorage.getItem(`${res.data.id}`)) || []
+              )
+            )
           );
 
           setShowModal(false);
@@ -43,7 +53,7 @@ export default function Modal() {
       } catch (error) {
         console.log(error);
         dispatch(loginFail());
-        toast.error(error.response.data.error, { theme: "colored" });
+        toast.error(error.response.data.error, { theme: 'colored' });
       }
       setShowModal(false);
     },
@@ -104,7 +114,7 @@ export default function Modal() {
                               name="username"
                               value={formik.values.username}
                               className="block w-full px-4 py-2 mt-2 text-primary bg-white border rounded-md focus:border-[#158dff] focus:ring-[#158dff] focus:outline-none focus:ring focus:ring-opacity-40"
-                              {...formik.getFieldProps("username")}
+                              {...formik.getFieldProps('username')}
                             />
                             {formik.touched.username &&
                             formik.errors.username ? (
@@ -125,7 +135,7 @@ export default function Modal() {
                               name="password"
                               value={formik.values.password}
                               className="block w-full px-4 py-2 mt-2 text-primary bg-white border rounded-md focus:border-[#158dff] focus:ring-[#158dff] focus:outline-none focus:ring focus:ring-opacity-40"
-                              {...formik.getFieldProps("password")}
+                              {...formik.getFieldProps('password')}
                             />
                             {formik.touched.password &&
                             formik.errors.password ? (
@@ -151,8 +161,8 @@ export default function Modal() {
                         </form>
 
                         <p className="mt-8 text-xs font-light text-center text-gray-700">
-                          {" "}
-                          Nếu bạn chưa có tài khoản?{" "}
+                          {' '}
+                          Nếu bạn chưa có tài khoản?{' '}
                           <Link
                             to="/register"
                             className="font-medium text-primary hover:underline"
@@ -165,23 +175,6 @@ export default function Modal() {
                     </div>
                   </section>
                 </div>
-                {/*footer*/}
-                {/* <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
-                  <button
-                    className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                    type="button"
-                    onClick={() => setShowModal(false)}
-                  >
-                    Close
-                  </button>
-                  <button
-                    className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                    type="button"
-                    onClick={() => setShowModal(false)}
-                  >
-                    Save Changes
-                  </button>
-                </div> */}
               </div>
             </div>
           </div>

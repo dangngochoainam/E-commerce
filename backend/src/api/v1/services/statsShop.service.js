@@ -1,5 +1,5 @@
-const db = require("../models");
-const { QueryTypes } = require("sequelize");
+const db = require('../models');
+const { QueryTypes } = require('sequelize');
 
 const statsShop = {
   // Thống kê doanh thu các sản phẩm của shop
@@ -38,7 +38,7 @@ const statsShop = {
         break;
     }
     try {
-      if (type === "PRODUCT") {
+      if (type === 'PRODUCT') {
         stats = await statsShop.statsByProduct(
           shopId,
           name,
@@ -49,34 +49,7 @@ const statsShop = {
           year,
           date
         );
-
-        // stats = await db.sequelize.query(
-        //   `select p.id, p.name, sum(d.quantity * d.unitPrice) as 'Doanh thu'
-        //   from ecommerce_db.order_details as d, ecommerce_db.product as p, ecommerce_db.order as o
-        //   where d.productId = p.id and o.id = d.orderId and p.shopId = :shopId and p.name like '%${name}%' ${
-        //     month > 0 && month < 13 ? "and MONTH(o.createdAt) = :month" : ""
-        //   } ${
-        //     quater !== 0
-        //       ? "and MONTH(o.createdAt) BETWEEN :fromMonth AND :toMonth"
-        //       : ""
-        //   } ${year > 0 ? "and YEAR(o.createdAt) = :year" : ""} ${
-        //     date ? "and DATE(o.createdAt) = DATE(:date)" : ""
-        //   }
-        //   group by p.id
-        //   order by sum(d.quantity * d.unitPrice) desc`,
-        //   {
-        //     replacements: {
-        //       shopId: shopId,
-        //       month: month,
-        //       fromMonth: fromMonth,
-        //       toMonth: toMonth,
-        //       year: year,
-        //       date: date,
-        //     },
-        //     type: QueryTypes.SELECT,
-        //   }
-        // );
-      } else if (type === "CATEGORY") {
+      } else if (type === 'CATEGORY') {
         stats = await statsShop.statsByCategory(
           shopId,
           categoryId,
@@ -87,36 +60,6 @@ const statsShop = {
           year,
           date
         );
-        // stats = await db.sequelize.query(
-        //   `select c.id, c.name, sum(d.quantity * d.unitPrice) as 'Doanh thu'
-        //   from ecommerce_db.order_details as d, ecommerce_db.product as p, ecommerce_db.order as o, ecommerce_db.category c
-        //   where d.productId = p.id and o.id = d.orderId and c.id = p.categoryId and p.shopId = :shopId ${
-        //     categoryId > 0 ? "and p.categoryId = :categoryId" : ""
-        //   } and p.name like '%${name}%' ${
-        //     month > 0 && month < 13 ? "and MONTH(o.createdAt) = :month" : ""
-        //   } ${
-        //     quater !== 0
-        //       ? "and MONTH(o.createdAt) BETWEEN :fromMonth AND :toMonth"
-        //       : ""
-        //   } ${year > 0 ? "and YEAR(o.createdAt) = :year" : ""} ${
-        //     date ? "and DATE(o.createdAt) = DATE(:date)" : ""
-        //   }
-        //   group by c.id
-        //   order by sum(d.quantity * d.unitPrice) desc`,
-
-        //   {
-        //     replacements: {
-        //       shopId: shopId,
-        //       categoryId: categoryId,
-        //       month: month,
-        //       fromMonth: fromMonth,
-        //       toMonth: toMonth,
-        //       year: year,
-        //       date: date,
-        //     },
-        //     type: QueryTypes.SELECT,
-        //   }
-        // );
       }
 
       return {
@@ -125,7 +68,7 @@ const statsShop = {
           status: 200,
 
           data: stats,
-        }
+        },
       };
     } catch (error) {
       console.log(error);
@@ -147,16 +90,16 @@ const statsShop = {
   ) => {
     try {
       const stats = await db.sequelize.query(
-        `select p.id, p.name, sum(d.quantity * d.unitPrice) as 'Doanh thu'
+        `select p.id, p.name, sum(d.quantity * d.unitPrice) as 'revenue'
         from ecommerce_db.order_details as d, ecommerce_db.product as p, ecommerce_db.order as o 
         where d.productId = p.id and o.id = d.orderId and p.shopId = :shopId and p.name like '%${name}%' ${
-          month > 0 && month < 13 ? "and MONTH(o.createdAt) = :month" : ""
+          month > 0 && month < 13 ? 'and MONTH(o.createdAt) = :month' : ''
         } ${
           quater !== 0
-            ? "and MONTH(o.createdAt) BETWEEN :fromMonth AND :toMonth"
-            : ""
-        } ${year > 0 ? "and YEAR(o.createdAt) = :year" : ""} ${
-          date ? "and DATE(o.createdAt) = DATE(:date)" : ""
+            ? 'and MONTH(o.createdAt) BETWEEN :fromMonth AND :toMonth'
+            : ''
+        } ${year > 0 ? 'and YEAR(o.createdAt) = :year' : ''} ${
+          date ? 'and DATE(o.createdAt) = DATE(:date)' : ''
         }
         group by p.id
         order by sum(d.quantity * d.unitPrice) desc`,
@@ -172,7 +115,6 @@ const statsShop = {
           type: QueryTypes.SELECT,
         }
       );
-      console.log(stats);
       return stats;
     } catch (error) {
       console.log(error);
@@ -191,16 +133,16 @@ const statsShop = {
   ) => {
     try {
       const stats = await db.sequelize.query(
-        `select c.id, c.name, sum(d.quantity * d.unitPrice) as 'Doanh thu'
+        `select c.id, c.name, sum(d.quantity * d.unitPrice) as 'revenue'
         from ecommerce_db.order_details as d, ecommerce_db.product as p, ecommerce_db.order as o, ecommerce_db.category c
         where d.productId = p.id and o.id = d.orderId and c.id = p.categoryId and p.shopId = :shopId ${
-          categoryId > 0 ? "and p.categoryId = :categoryId" : ""
-        } ${month > 0 && month < 13 ? "and MONTH(o.createdAt) = :month" : ""} ${
+          categoryId > 0 ? 'and p.categoryId = :categoryId' : ''
+        } ${month > 0 && month < 13 ? 'and MONTH(o.createdAt) = :month' : ''} ${
           quater !== 0
-            ? "and MONTH(o.createdAt) BETWEEN :fromMonth AND :toMonth"
-            : ""
-        } ${year > 0 ? "and YEAR(o.createdAt) = :year" : ""} ${
-          date ? "and DATE(o.createdAt) = DATE(:date)" : ""
+            ? 'and MONTH(o.createdAt) BETWEEN :fromMonth AND :toMonth'
+            : ''
+        } ${year > 0 ? 'and YEAR(o.createdAt) = :year' : ''} ${
+          date ? 'and DATE(o.createdAt) = DATE(:date)' : ''
         }
         group by c.id
         order by sum(d.quantity * d.unitPrice) desc`,

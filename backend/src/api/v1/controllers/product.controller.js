@@ -1,4 +1,4 @@
-const productService = require("../services/product.service");
+const productService = require('../services/product.service');
 
 module.exports = {
   compareProduct: async (req, res) => {
@@ -72,11 +72,11 @@ module.exports = {
     if (req.files) product.image = req.files.image.tempFilePath;
     const productId = req.params.id;
     try {
-      const { code } = await productService.editProduct({
+      const { code, data } = await productService.editProduct({
         productId: productId,
         newProduct: product,
       });
-      return res.status(code).json();
+      return res.status(code).json(data);
     } catch (error) {
       console.log(error);
       return res.status(500).json();
@@ -84,10 +84,10 @@ module.exports = {
   },
 
   deleteProduct: async (req, res) => {
-    const productId = req.params.id;
+    const productId = parseInt(req.params.id);
     try {
-      const { code } = await productService.deleteProduct(productId);
-      return res.status(code).json();
+      const { code, data } = await productService.deleteProduct(productId);
+      return res.status(code).json(data);
     } catch (error) {
       console.log(error);
       return res.status(500).json();

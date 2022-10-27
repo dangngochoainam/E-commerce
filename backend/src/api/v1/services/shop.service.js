@@ -1,8 +1,7 @@
-const db = require("../models");
+const db = require('../models');
 const _Shop = db.Shop;
 const _Seller = db.Seller;
-const cloudinary = require("../../../config/cloudinary");
-
+const cloudinary = require('../../../config/cloudinary');
 
 module.exports = {
   getShopById: async (shopId) => {
@@ -22,7 +21,7 @@ module.exports = {
       return {
         code: 404,
         data: {
-          error: "Cửa hàng không tồn tại",
+          error: 'Cửa hàng không tồn tại',
         },
       };
     } catch (error) {
@@ -47,7 +46,7 @@ module.exports = {
           code: 404,
           data: {
             status: 404,
-            error: "Người dùng không có cửa hàng",
+            error: 'Người dùng không có cửa hàng',
           },
         };
       }
@@ -57,6 +56,28 @@ module.exports = {
           sellerId: seller.id,
         },
       });
+
+      return {
+        code: 200,
+        data: {
+          status: 200,
+          data: shops,
+        },
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        code: 500,
+        data: {
+          status: 500,
+        },
+      };
+    }
+  },
+
+  getAllShop: async () => {
+    try {
+      const shops = await _Shop.findAll();
 
       return {
         code: 200,
@@ -98,7 +119,7 @@ module.exports = {
         code: 404,
         data: {
           status: 404,
-          error: "Cửa hàng không tồn tại",
+          error: 'Cửa hàng không tồn tại',
         },
       };
     } catch (error) {
@@ -112,8 +133,8 @@ module.exports = {
   resgister: async ({ shop }) => {
     try {
       const result = await cloudinary.uploader.upload(shop.image, {
-        folder: "Ecommerce",
-        resource_type: "auto",
+        folder: 'Ecommerce',
+        resource_type: 'auto',
       });
       const newShop = await _Shop.create({ ...shop, image: result.secure_url });
       if (newShop) {

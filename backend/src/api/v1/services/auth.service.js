@@ -1,6 +1,6 @@
-const bcrypt = require("bcrypt");
-const cloudinary = require("../../../config/cloudinary");
-const db = require("../models");
+const bcrypt = require('bcrypt');
+const cloudinary = require('../../../config/cloudinary');
+const db = require('../models');
 const _User = db.User;
 const _Customer = db.Customer;
 const _Seller = db.Seller;
@@ -18,7 +18,7 @@ module.exports = {
           code: 400,
           data: {
             status: 400,
-            error: "Tên tài khoản đã được sử dụng",
+            error: 'Tên tài khoản đã được sử dụng',
           },
         };
       }
@@ -27,22 +27,22 @@ module.exports = {
           code: 400,
           data: {
             stats: 400,
-            error: "Email đã được sử dụng",
+            error: 'Email đã được sử dụng',
           },
         };
       } else {
         const salt = await bcrypt.genSalt(11);
         const hashed = await bcrypt.hash(user.password, salt);
         const result = await cloudinary.uploader.upload(user.avatar, {
-          folder: "Ecommerce",
-          resource_type: "auto",
+          folder: 'Ecommerce',
+          resource_type: 'auto',
         });
 
-        if (user.roles === "CUSTOMER") {
-          user.roles = "CUSTOMER";
-        } else if (user.roles === "SELLER") {
-          user.roles = "CUSTOMER,SELLER";
-        } else user.roles = "";
+        if (user.roles === 'CUSTOMER') {
+          user.roles = 'CUSTOMER';
+        } else if (user.roles === 'SELLER') {
+          user.roles = 'CUSTOMER,SELLER';
+        } else user.roles = '';
 
         const newUser = await _User.create(
           {
@@ -53,15 +53,15 @@ module.exports = {
           { transaction: transaction }
         );
 
-        if (user.roles.indexOf("CUSTOMER") !== -1) {
+        if (user.roles.indexOf('CUSTOMER') !== -1) {
           const customer = await _Customer.create(
             { userId: newUser.id },
             { transaction: transaction }
           );
         }
-        if (user.roles.indexOf("SELLER") !== -1) {
+        if (user.roles.indexOf('SELLER') !== -1) {
           const seller = await _Seller.create(
-            { type: "Nhà bán lẻ", userId: newUser.id },
+            { type: 'Nhà bán lẻ', userId: newUser.id },
             { transaction: transaction }
           );
         }
@@ -90,14 +90,16 @@ module.exports = {
     try {
       const user = await _User.findOne({
         attributes: [
-          "id",
-          "firstname",
-          "lastname",
-          "avatar",
-          "password",
-          "lastVisited",
-          "roles",
-          "status",
+          'id',
+          'firstname',
+          'lastname',
+          'avatar',
+          'password',
+          'lastVisited',
+          'address',
+          'phone',
+          'roles',
+          'status',
         ],
         where: {
           username: username,
@@ -107,7 +109,7 @@ module.exports = {
         return {
           code: 404,
           data: {
-            error: "Tên tài khoản không tồn tại",
+            error: 'Tên tài khoản không tồn tại',
             status: 404,
           },
         };
@@ -119,7 +121,7 @@ module.exports = {
         return {
           code: 404,
           data: {
-            error: "Mật khẩu không đúng",
+            error: 'Mật khẩu không đúng',
             status: 404,
           },
         };

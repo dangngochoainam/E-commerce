@@ -1,4 +1,4 @@
-const shopService = require("../services/shop.service");
+const shopService = require('../services/shop.service');
 
 module.exports = {
   register: async (req, res) => {
@@ -28,6 +28,16 @@ module.exports = {
   getShopsByUserId: async (req, res) => {
     try {
       const { code, data } = await shopService.getShopsByUserId(req.params.id);
+      return res.status(code).json(data);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json();
+    }
+  },
+
+  getAllShop: async (req, res) => {
+    try {
+      const { code, data } = await shopService.getAllShop();
       return res.status(code).json(data);
     } catch (error) {
       console.log(error);

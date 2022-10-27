@@ -9,21 +9,50 @@ const { QueryTypes } = require('sequelize');
 const productService = {
   getProductToCompare: async (productId) => {
     try {
-      const product = await db.sequelize.query(
-        `select p.*, s.name as 'shopName', s.rate as 'shopRate', sum(d.quantity) as 'totalProductSold'
-      from ecommerce_db.order_details as d, ecommerce_db.product as p, ecommerce_db.order as o, ecommerce_db.shop s 
-      where d.productId = p.id and o.id = d.orderId and p.shopId = s.id and p.id = :productId`,
-        {
-          replacements: {
-            productId: productId,
-          },
-          type: QueryTypes.SELECT,
-        }
-      );
-      return product[0];
+      const product = await _Product.findByPk(productId, {
+        include: {
+          model: db.Shop,
+          attributes: ['name', 'rate'],
+        },
+      });
+      const countReview = await _Review.count({
+        where: {
+          productId: product.id,
+        },
+      });
+      const totalProductSold = await _OrderDetails.sum('quantity', {
+        where: {
+          productId: product.id,
+        },
+      });
+      return { ...product.dataValues, countReview, totalProductSold };
     } catch (error) {
-      console.log(error);
+      return {
+        code: 500,
+        data: {
+          status: 500,
+          error,
+        },
+      };
     }
+    // try {
+    //   const product = await db.sequelize.query(
+    //     `select p.*, s.name as 'shopName', s.rate as 'shopRate', sum(d.quantity) as 'totalProductSold'
+    //   from ecommerce_db.order_details as d, ecommerce_db.product as p, ecommerce_db.order as o, ecommerce_db.shop s
+    //   where d.productId = p.id and o.id = d.orderId and p.shopId = s.id and p.id = :productId`,
+    //     {
+    //       replacements: {
+    //         productId: productId,
+    //       },
+    //       type: QueryTypes.SELECT,
+    //     }
+    //   );
+
+    //   console.log(product);
+    //   return product[0];
+    // } catch (error) {
+    //   console.log(error);
+    // }
   },
   compareProduct: async ({ productId1, productId2 }) => {
     try {
@@ -105,7 +134,7 @@ const productService = {
         },
         offset: start,
         limit: parseInt(process.env.PAGE_SIZE),
-        order: [sortBy ? [sortBy, order] : ['id', 'asc']],
+        order: [sortBy ? [sortBy, order] : ['id', 'desc']],
       });
 
       const productAmount = await _Product.count({
@@ -161,7 +190,7 @@ const productService = {
         },
         offset: start,
         limit: parseInt(process.env.PAGE_SIZE),
-        order: [sortBy ? [sortBy, order] : ['id', 'asc']],
+        order: [sortBy ? [sortBy, order] : ['id', 'desc']],
       });
 
       const productAmount = await _Product.count({
@@ -281,6 +310,7 @@ const productService = {
           code: 200,
           data: {
             status: 200,
+            data: newProduct,
           },
         };
       } else {

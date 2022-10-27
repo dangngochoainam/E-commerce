@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react';
 
-const Dashboard = () => {
+const DashboardAdmin = () => {
   return (
     <>
       <div className="w-full px-4 md:px-0 md:mt-8 mb-16 text-gray-800 leading-normal">
@@ -18,7 +18,7 @@ const Dashboard = () => {
                     Tổng doanh thu
                   </h5>
                   <h3 className="font-bold text-3xl">
-                    $3249{" "}
+                    $3249{' '}
                     <span className="text-green-500">
                       <i className="fas fa-caret-up"></i>
                     </span>
@@ -40,7 +40,7 @@ const Dashboard = () => {
                     Số lượng sản phẩm
                   </h5>
                   <h3 className="font-bold text-3xl">
-                    249{" "}
+                    249{' '}
                     <span className="text-pink-500">
                       <i className="fas fa-exchange-alt"></i>
                     </span>
@@ -62,7 +62,7 @@ const Dashboard = () => {
                     Số lượng người dùng
                   </h5>
                   <h3 className="font-bold text-3xl">
-                    2{" "}
+                    2{' '}
                     <span className="text-yellow-600">
                       <i className="fas fa-caret-up"></i>
                     </span>
@@ -118,7 +118,7 @@ const Dashboard = () => {
                     Số lượng người bán hàng
                   </h5>
                   <h3 className="font-bold text-3xl">
-                    3{" "}
+                    3{' '}
                     <span className="text-red-500">
                       <i className="fas fa-caret-up"></i>
                     </span>
@@ -295,4 +295,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default DashboardAdmin;

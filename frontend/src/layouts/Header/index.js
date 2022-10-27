@@ -1,28 +1,31 @@
-import { FiShoppingCart } from "react-icons/fi";
-import { FaRegUser } from "react-icons/fa";
-import LoginModal from "../../components/Modal/LoginModal";
-import { MdOutlineArrowDropDown } from "react-icons/md";
-import { Link } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import InputSearch from "../../components/Search/InputSearch";
-import "./style.scss";
-import { toast } from "react-toastify";
-import { authAxios } from "../../lib/axios/axios.config";
-import { logoutSuccess } from "../../lib/redux/authSlide";
+import { FiShoppingCart } from 'react-icons/fi';
+import { FaRegUser } from 'react-icons/fa';
+import LoginModal from '../../components/Modal/LoginModal';
+import { MdOutlineArrowDropDown } from 'react-icons/md';
+import { Link } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import InputSearch from '../../components/Search/InputSearch';
+import './style.scss';
+import { toast } from 'react-toastify';
+import { authAxios } from '../../lib/axios/axios.config';
+import { logoutSuccess } from '../../lib/redux/authSlide';
+import { countProduct } from '../../lib/redux/cartSlide';
 
 const Header = () => {
   const currentUser = useSelector((state) => state.auth.currentUser);
+  const totalProduct = useSelector((state) => state.cart.totalProduct);
   const dispatch = useDispatch();
   const handleLogOut = async () => {
     try {
-      const { data: res } = await authAxios(currentUser).post("/logout");
+      const { data: res } = await authAxios(currentUser).post('/logout');
       if (res.status === 204) {
-        localStorage.removeItem("auth");
+        localStorage.removeItem('auth');
         dispatch(logoutSuccess());
-        toast.success("Thoát tài khoản thành công", { theme: "colored" });
+        dispatch(countProduct(0));
+        toast.success('Thoát tài khoản thành công', { theme: 'colored' });
       }
     } catch (error) {
-      toast.error(error.response.data.error, { theme: "colored" });
+      toast.error(error.response.data.error, { theme: 'colored' });
     }
   };
   return (
@@ -42,7 +45,7 @@ const Header = () => {
             <div className="flex justify-between grow">
               <InputSearch />
 
-              <div className="flex items-center  mr-7">
+              <div className="flex items-center mr-2">
                 {currentUser ? (
                   <span className="w-12 h-12 rounded-full">
                     <img
@@ -77,9 +80,15 @@ const Header = () => {
                                 Trang cá nhân
                               </Link>
                             </li>
-                            {currentUser.roles === "STAFF" ? (
+                            {currentUser.roles === 'STAFF' ? (
                               <li className="sub__item">
                                 <Link to="/staff">Trang quản lý</Link>
+                              </li>
+                            ) : null}
+
+                            {currentUser.roles === 'ADMIN' ? (
+                              <li className="sub__item">
+                                <Link to="/admin">Trang quản trị</Link>
                               </li>
                             ) : null}
                             <li className="sub__item">Đơn hàng của bạn</li>
@@ -112,11 +121,17 @@ const Header = () => {
                 </div>
               </div>
               <div className="flex items-center">
-                <Link className="flex items-center text-xs" to="/cart">
+                <Link
+                  to="/cart"
+                  className="inline-flex relative items-center p-3 text-sm font-medium text-center text-white"
+                >
                   <span className="text-3xl mr-2">
                     <FiShoppingCart />
                   </span>
                   <span className=" self-end"> Giỏ hàng</span>
+                  <div className="inline-flex absolute top-0 left-8 justify-center items-center w-5 h-5 text-xs font-bold text-black bg-yellow-500 rounded-full ">
+                    {totalProduct}
+                  </div>
                 </Link>
               </div>
             </div>

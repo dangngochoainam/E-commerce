@@ -1,4 +1,4 @@
-const adminService = require("../services/admin.service");
+const adminService = require('../services/admin.service');
 
 module.exports = {
   stats: async (req, res) => {
