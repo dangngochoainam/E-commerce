@@ -3,7 +3,8 @@
         display: none;
         position: absolute;
         width: 15rem;
-        top: 100%;
+        top: 75%;
+        left: 65px;
         transform: translateX(-30%);
         background-color: white;
         color: black;
@@ -20,5 +21,16 @@
     }
     .isLogin:hover > .sub__nav {
         display: block;
+    }
+
+    .btn-notif {
+        &:hover {
+            .notification__container {
+                display: block;
+            }
+        }
+        .notification__container {
+            display: none;
+        }
     }
 }

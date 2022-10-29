@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { MdOutlineArrowDropDown } from 'react-icons/md';
 import { Link, useNavigate } from 'react-router-dom';
 import './style.scss';
@@ -11,9 +11,11 @@ import { useDispatch } from 'react-redux';
 import { loginSuccess, loginFail } from '../../lib/redux/authSlide';
 import { countProduct } from '../../lib/redux/cartSlide';
 import { counterProductInCart } from '../../utils';
+import { socket } from '../../utils';
 
 export default function Modal() {
   const [showModal, setShowModal] = React.useState(false);
+
   const dispatch = useDispatch();
 
   const formik = useFormik({
@@ -39,7 +41,6 @@ export default function Modal() {
             JSON.stringify({ ...res.data, accessToken: res.accessToken })
           );
 
-
           dispatch(
             countProduct(
               counterProductInCart(
@@ -47,6 +48,8 @@ export default function Modal() {
               )
             )
           );
+
+          socket?.emit('newUser', res.data.username);
 
           setShowModal(false);
         }

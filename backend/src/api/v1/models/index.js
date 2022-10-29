@@ -306,8 +306,8 @@ db.sequelize
   // .then(() => db.UserSearch.bulkCreate(initData.userSearch))
   // .then(() => db.Staff.bulkCreate(initData.staff))
   // .then(() => db.Admin.bulkCreate(initData.admin))
-  // .then(() => db.Order.bulkCreate(initData.order))
-  // .then(() => db.OrderDetails.bulkCreate(initData.orderDetails))
+  // // .then(() => db.Order.bulkCreate(initData.order))
+  // // .then(() => db.OrderDetails.bulkCreate(initData.orderDetails))
   // .then(() => db.Review.bulkCreate(initData.review))
   // .then(() => db.Comment.bulkCreate(initData.comment))
   // .then(() => db.SubComment.bulkCreate(initData.subComment));

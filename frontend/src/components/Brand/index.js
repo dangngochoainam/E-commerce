@@ -1,21 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   AiFillStar,
   AiOutlinePlus,
   AiOutlineFileProtect,
   AiOutlineLike,
   AiOutlineRollback,
-} from "react-icons/ai";
-import { BsShop } from "react-icons/bs";
-import { Link, useNavigate } from "react-router-dom";
-import { endpoints } from "../../configs/Apis";
-import { axiosClient } from "../../lib/axios/axios.config";
-import { useSelector } from "react-redux";
-import "./style.scss";
+} from 'react-icons/ai';
+import { BsShop } from 'react-icons/bs';
+import { Link, useNavigate } from 'react-router-dom';
+import { endpoints } from '../../configs/Apis';
+import { axiosClient } from '../../lib/axios/axios.config';
+import { useSelector } from 'react-redux';
+import './style.scss';
 
 const Brand = ({ shopId, layout }) => {
   const [shop, setShop] = useState();
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
   const [userOfShop, setUserOfShop] = useState(0);
   const currentUser = useSelector((state) => state.auth.currentUser);
   const navigate = useNavigate();
@@ -30,7 +30,7 @@ const Brand = ({ shopId, layout }) => {
     setUserOfShop(parseInt(res.data));
   };
   useEffect(() => {
-    console.log("useEffect Brand");
+    console.log('useEffect Brand');
     getUserIDByShopID(shopId);
     getShop(shopId);
   }, [shopId]);
@@ -42,8 +42,8 @@ const Brand = ({ shopId, layout }) => {
   };
   return (
     <>
-      {shop && layout !== "horizontal" ? (
-        <div className="right w-5/12 border border-gray-200 rounded p-2 mb-2">
+      {shop && layout !== 'horizontal' ? (
+        <div className="right min-w-[300px] border border-gray-200 rounded p-2 mb-2">
           <div className="capitalize flex mb-5">
             <img
               className="w-8 h-12 object-cover"

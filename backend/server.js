@@ -18,7 +18,9 @@ const server = http.createServer(app);
 
 // Setup SOCKET.IO
 const io = new Server(server, {
-  /* options */
+  cors: {
+    origin: 'http://localhost:3000',
+  },
 });
 let onlineUsers = [];
 
@@ -38,27 +40,31 @@ const getUser = (username) => {
 io.on('connection', (socket) => {
   socket.on('newUser', (username) => {
     addNewUser(username, socket.id);
-  });
 
+    console.log(onlineUsers);
+  });
+  
   socket.on('sendNotification', ({ senderName, receiverName, type }) => {
     const receiver = getUser(receiverName);
-    io.to(receiver.socketId).emit('getNotification', {
+    io.to(`${receiver?.socketId}`).emit('getNotification', {
       senderName,
-      type,
+      content: type,
     });
   });
 
   socket.on('sendText', ({ senderName, receiverName, text }) => {
     const receiver = getUser(receiverName);
-    io.to(receiver.socketId).emit('getText', {
+    io.to(`${receiver?.socketId}`).emit('getText', {
       senderName,
       text,
     });
   });
-
-  socket.on('disconnect', () => {
+  
+  socket.on('logout', () => {
     removeUser(socket.id);
+    console.log(onlineUsers);
   });
+
 });
 
 server.listen(process.env.PORT, (req, res) => {

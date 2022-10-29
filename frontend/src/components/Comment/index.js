@@ -1,29 +1,43 @@
-import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { addComment, fetchComment } from "../../utils/apiComment";
-import { toast } from "react-toastify";
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { addComment, fetchComment } from '../../utils/apiComment';
+import { toast } from 'react-toastify';
+import { socket } from '../../utils';
+import { getUserByProductID } from '../../utils/apiProduct';
+import { createNotification } from '../../utils/apiNotification';
 
-
-
-
-const Comment = ({ productId }) => {
-  const [inputComment, setInputComment] = useState("");
+const Comment = ({ product }) => {
+  const [inputComment, setInputComment] = useState('');
   const [comments, setComments] = useState([]);
   const currentUser = useSelector((state) => state.auth.currentUser);
 
   const fetchAPI = async () => {
     try {
-      const res = await fetchComment(productId);
+      const res = await fetchComment(product.id);
       if (res.status === 200) setComments(res.data);
     } catch (error) {
       console.log(error);
     }
   };
 
+  const handleNotification = async (type, productID) => {
+    const product = await getUserByProductID(productID);
+    console.log({
+      senderName: currentUser.username,
+      receiverName: product.data.shop.seller.user.username,
+      type,
+    });
+    socket.emit('sendNotification', {
+      senderName: currentUser.username,
+      receiverName: product.data.shop.seller.user.username,
+      type,
+    });
+  };
+
   useEffect(() => {
-    console.log("useEffect Comment");
+    console.log('useEffect Comment');
     fetchAPI();
-  }, [productId]);
+  }, [product]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,13 +45,22 @@ const Comment = ({ productId }) => {
     try {
       const res = await addComment(currentUser, {
         content: inputComment,
-        productId: productId,
+        productId: product.id,
       });
 
       if (res.status === 201) {
-        toast.success("Bình luận thành công", { theme: "colored" });
+        toast.success('Bình luận thành công', { theme: 'colored' });
         fetchAPI();
-        setInputComment("");
+        setInputComment('');
+        handleNotification(
+          `${currentUser.firstname} ${currentUser.lastname} đã bình luận trên sản phẩm ${product.name}`,
+          product.id
+        );
+        await createNotification(currentUser, {
+          type: 'PRODUCT',
+          content: `${currentUser.firstname} ${currentUser.lastname} đã bình luận trên sản phẩm ${product.name}`,
+          valueId: product.id,
+        });
       }
     } catch (error) {
       console.log(error);
@@ -66,7 +89,7 @@ const Comment = ({ productId }) => {
             </form>
           ) : (
             <p className="text-red-400 text-center">
-              {" "}
+              {' '}
               Vui lòng đăng nhập để bình luận
             </p>
           )}

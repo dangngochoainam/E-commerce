@@ -252,7 +252,7 @@ const StatsByCate = () => {
                         Mã
                       </th>
                       <th scope="col" className="py-3 px-6">
-                        Tên sản phẩm
+                        Tên danh mục
                       </th>
                       <th scope="col" className="py-3 px-6">
                         Doanh thu

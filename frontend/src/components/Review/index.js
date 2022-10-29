@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { AiFillStar } from "react-icons/ai";
-import { countRateOfProduct } from "../../utils/apiReview";
-import ReviewModal from "../Modal/ReviewModal";
-import { useSelector } from "react-redux";
-import "./style.scss";
-import ListReviewModal from "../Modal/ListReviewModal";
+import React, { useEffect, useState } from 'react';
+import { AiFillStar } from 'react-icons/ai';
+import { countRateOfProduct } from '../../utils/apiReview';
+import ReviewModal from '../Modal/ReviewModal';
+import { useSelector } from 'react-redux';
+import './style.scss';
+import ListReviewModal from '../Modal/ListReviewModal';
 
 const Review = ({ rate, product }) => {
   const [rates, setRates] = useState();
@@ -20,7 +20,7 @@ const Review = ({ rate, product }) => {
     setRates({ ...res.data, totalRate, avgRate });
   };
   useEffect(() => {
-    console.log("useEffect Review");
+    console.log('useEffect Review');
     fetchAPI();
   }, [product]);
 
@@ -30,31 +30,31 @@ const Review = ({ rate, product }) => {
       {
         rate: 5,
         percent: `after:w-[${parseInt(
-          ((rates["0"]?.rateCount || 0) / rates.totalRate) * 100
+          ((rates['0']?.rateCount || 0) / rates.totalRate) * 100
         )}%]`,
       },
       {
         rate: 4,
         percent: `after:w-[${parseInt(
-          ((rates["1"]?.rateCount || 0) / rates.totalRate) * 100
+          ((rates['1']?.rateCount || 0) / rates.totalRate) * 100
         )}%]`,
       },
       {
         rate: 3,
         percent: `after:w-[${parseInt(
-          ((rates["2"]?.rateCount || 0) / rates.totalRate) * 100
+          ((rates['2']?.rateCount || 0) / rates.totalRate) * 100
         )}%]`,
       },
       {
         rate: 2,
         percent: `after:w-[${parseInt(
-          ((rates["3"]?.rateCount || 0) / rates.totalRate) * 100
+          ((rates['3']?.rateCount || 0) / rates.totalRate) * 100
         )}%]`,
       },
       {
         rate: 1,
         percent: `after:w-[${parseInt(
-          ((rates["4"]?.rateCount || 0) / rates.totalRate) * 100
+          ((rates['4']?.rateCount || 0) / rates.totalRate) * 100
         )}%]`,
       },
     ];
@@ -67,7 +67,7 @@ const Review = ({ rate, product }) => {
       ratePercent[4].percent,
     ];
   }
-
+  console.log(rates);
   return (
     <>
       {rates && (
@@ -79,7 +79,8 @@ const Review = ({ rate, product }) => {
             <div>
               <div className="review-rating__summary flex items-center mb-4">
                 <div className="text-3xl font-bold mr-3">
-                  {rates && rates.avgRate.toFixed(1)}
+              
+                  {Number.isNaN(rates.avgRate) ? 0 : rates.avgRate.toFixed(1)}
                 </div>
                 <div>
                   <div className="flex items-center">
@@ -104,7 +105,7 @@ const Review = ({ rate, product }) => {
 
                   <div
                     className={`review-rating__detail--process h-1 w-32 bg-gray-200 mr-2 rounded-sm after:w-[${parseInt(
-                      ((rates["0"]?.rateCount || 0) / rates.totalRate) * 100
+                      ((rates['0']?.rateCount || 0) / rates.totalRate) * 100
                     )}%]`}
                   ></div>
 
@@ -115,7 +116,7 @@ const Review = ({ rate, product }) => {
                     className={`review-rating__detail--process h-1 w-32 bg-gray-200 mr-2 rounded-sm ${percentTailwind[0]}`}
                   ></div> */}
 
-                  <span>{rates["0"]?.rateCount || 0}</span>
+                  <span>{rates['0']?.rateCount || 0}</span>
                 </div>
                 <div className="flex items-center">
                   <div className="flex items-center mr-2">
@@ -128,7 +129,7 @@ const Review = ({ rate, product }) => {
 
                   <div
                     className={`review-rating__detail--process h-1 w-32 bg-gray-200 mr-2 rounded-sm after:w-[${parseInt(
-                      ((rates["1"]?.rateCount || 0) / rates.totalRate) * 100
+                      ((rates['1']?.rateCount || 0) / rates.totalRate) * 100
                     )}%]`}
                   ></div>
 
@@ -139,7 +140,7 @@ const Review = ({ rate, product }) => {
                     className={`review-rating__detail--process h-1 w-32 bg-gray-200 mr-2 rounded-sm ${percentTailwind[1]}`}
                   ></div> */}
 
-                  <span>{rates["1"]?.rateCount || 0}</span>
+                  <span>{rates['1']?.rateCount || 0}</span>
                 </div>
                 <div className="flex items-center">
                   <div className="flex items-center mr-2">
@@ -152,7 +153,7 @@ const Review = ({ rate, product }) => {
 
                   <div
                     className={`review-rating__detail--process h-1 w-32 bg-gray-200 mr-2 rounded-sm after:w-[${parseInt(
-                      ((rates["2"]?.rateCount || 0) / rates.totalRate) * 100
+                      ((rates['2']?.rateCount || 0) / rates.totalRate) * 100
                     )}%]`}
                   ></div>
 
@@ -163,7 +164,7 @@ const Review = ({ rate, product }) => {
                     className={`review-rating__detail--process h-1 w-32 bg-gray-200 mr-2 rounded-sm ${percentTailwind[2]}`}
                   ></div> */}
 
-                  <span>{rates["2"]?.rateCount || 0}</span>
+                  <span>{rates['2']?.rateCount || 0}</span>
                 </div>
                 <div className="flex items-center">
                   <div className="flex items-center mr-2">
@@ -176,7 +177,7 @@ const Review = ({ rate, product }) => {
 
                   <div
                     className={`review-rating__detail--process h-1 w-32 bg-gray-200 mr-2 rounded-sm after:w-[${parseInt(
-                      ((rates["3"]?.rateCount || 0) / rates.totalRate) * 100
+                      ((rates['3']?.rateCount || 0) / rates.totalRate) * 100
                     )}%]`}
                   ></div>
 
@@ -187,7 +188,7 @@ const Review = ({ rate, product }) => {
                     className={`review-rating__detail--process h-1 w-32 bg-gray-200 mr-2 rounded-sm ${percentTailwind[3]}`}
                   ></div> */}
 
-                  <span>{rates["3"]?.rateCount || 0}</span>
+                  <span>{rates['3']?.rateCount || 0}</span>
                 </div>
                 <div className="flex items-center">
                   <div className="flex items-center mr-2">
@@ -200,7 +201,7 @@ const Review = ({ rate, product }) => {
 
                   <div
                     className={`review-rating__detail--process h-1 w-32 bg-gray-200 mr-2 rounded-sm after:w-[${parseInt(
-                      ((rates["4"]?.rateCount || 0) / rates.totalRate) * 100
+                      ((rates['4']?.rateCount || 0) / rates.totalRate) * 100
                     )}%]`}
                   ></div>
 
@@ -211,7 +212,7 @@ const Review = ({ rate, product }) => {
                     className={`review-rating__detail--process h-1 w-32 bg-gray-200 mr-2 rounded-sm ${percentTailwind[4]}`}
                   ></div> */}
 
-                  <span>{rates["4"]?.rateCount || 0}</span>
+                  <span>{rates['4']?.rateCount || 0}</span>
                 </div>
               </div>
             </div>

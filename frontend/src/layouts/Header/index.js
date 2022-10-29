@@ -10,8 +10,14 @@ import { toast } from 'react-toastify';
 import { authAxios } from '../../lib/axios/axios.config';
 import { logoutSuccess } from '../../lib/redux/authSlide';
 import { countProduct } from '../../lib/redux/cartSlide';
+import Notification from '../../components/Notification';
+
+import { useEffect, useState } from 'react';
+import { socket } from '../../utils';
+import { getNotification } from '../../utils/apiNotification';
 
 const Header = () => {
+  const [notification, setNotification] = useState([]);
   const currentUser = useSelector((state) => state.auth.currentUser);
   const totalProduct = useSelector((state) => state.cart.totalProduct);
   const dispatch = useDispatch();
@@ -22,12 +28,44 @@ const Header = () => {
         localStorage.removeItem('auth');
         dispatch(logoutSuccess());
         dispatch(countProduct(0));
+        socket.emit('logout');
         toast.success('Thoát tài khoản thành công', { theme: 'colored' });
       }
     } catch (error) {
+      console.log(error);
       toast.error(error.response.data.error, { theme: 'colored' });
     }
   };
+
+  const loadNotification = async () => {
+    try {
+      const res = await getNotification(currentUser);
+      if (res.status === 200) {
+        setNotification(res.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    if (currentUser) {
+      loadNotification();
+    } else {
+      setNotification([]);
+    }
+  }, [currentUser]);
+
+  useEffect(() => {
+    console.log('useEffect in notification');
+
+    socket.off('getNotification').on('getNotification', (data) => {
+      setNotification((prev) => [ data, ...prev]);
+    });
+
+  }, [socket]);
+
+  console.log(notification);
+
   return (
     <>
       <header className="bg-[#0083ff] text-white header">
@@ -64,7 +102,7 @@ const Header = () => {
                   {currentUser ? (
                     <>
                       <button
-                        className="flex flex-col justify-start"
+                        className="btn-login flex flex-col h-20 justify-center"
                         type="button"
                       >
                         <span className="capitalize block text-xs">
@@ -98,7 +136,7 @@ const Header = () => {
                           </ul>
                         </span>
                       </button>
-                      <button className="flex mx-4 text-gray-600 focus:outline-none">
+                      <button className="btn-notif h-20 flex mx-4 items-center text-gray-600 focus:outline-none relative">
                         <svg
                           className="w-6 h-6"
                           viewBox="0 0 24 24"
@@ -113,6 +151,8 @@ const Header = () => {
                             strokeLinejoin="round"
                           ></path>
                         </svg>
+
+                        <Notification notifications={notification} />
                       </button>
                     </>
                   ) : (

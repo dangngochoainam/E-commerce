@@ -193,7 +193,7 @@ const ProductDetails = () => {
           <div className="bg-main h-5"></div>
           <Review product={product} />
           <div className="bg-main h-5"></div>
-          <Comment productId={product.id} />
+          <Comment product={product} />
         </main>
       )}
     </>

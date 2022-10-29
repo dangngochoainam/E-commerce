@@ -91,6 +91,7 @@ module.exports = {
       const user = await _User.findOne({
         attributes: [
           'id',
+          'username',
           'firstname',
           'lastname',
           'avatar',

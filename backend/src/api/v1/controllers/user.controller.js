@@ -9,6 +9,15 @@ module.exports = {
       return res.status(500).json();
     }
   },
+  getUserByProductID: async (req, res) => {
+    try {
+      const { code, data } = await userService.getUserByProductId(req.params.productID);
+      return res.status(code).json(data);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json();
+    }
+  },
   getUserByShopID: async (req, res) => {
     try {
       const { code, data } = await userService.getUserIDByShopID(

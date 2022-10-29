@@ -12,3 +12,6 @@ export const getProductByID = async (productID) =>
 
 export const deleteProduct = async (currentUser, productId) =>
   authAxios(currentUser).delete(`${endpoints.products}${productId}}`);
+
+export const getUserByProductID = async (productID) =>
+  axiosClient.get(`${endpoints.users}ofProduct/${productID}`);

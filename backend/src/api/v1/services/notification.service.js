@@ -1,4 +1,4 @@
-const db = require("../models");
+const db = require('../models');
 const _Notification = db.Notification;
 const _Product = db.Product;
 const _Order = db.Order;
@@ -10,7 +10,7 @@ module.exports = {
     try {
       let shop, seller, product;
       switch (type) {
-        case "PRODUCT":
+        case 'PRODUCT':
           product = await _Product.findByPk(valueId);
           shop = await product.getShop();
           seller = await shop.getSeller();
@@ -28,7 +28,7 @@ module.exports = {
           notification = await _Notification.create({ ...notification });
           break;
 
-        case "ORDER":
+        case 'ORDER':
           const order = await _Order.findByPk(valueId);
           shop = await order.getShop();
           seller = await shop.getSeller();
@@ -46,7 +46,7 @@ module.exports = {
 
           notification = await _Notification.create({ ...notification });
           break;
-        case "SUBCOMMET":
+        case 'SUBCOMMET':
           const subComment = await _SubComment.findByPk(valueId);
           let comment = await subComment.getComment();
           product = await comment.getProduct();
@@ -95,11 +95,11 @@ module.exports = {
           sourceUserId: userId,
         },
       });
+
       return {
         code: 200,
         data: {
           status: 200,
-
           data: notifications,
         },
       };

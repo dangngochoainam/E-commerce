@@ -300,7 +300,7 @@ const data = {
       price: 37000000,
       description:
         "Thanh lịch, hiện đại trong từng đường nét.Thừa hưởng phong cách thiết kế tối giản, hiện đại của thế hệ iPhone 13 series, iPhone 14 Pro vẫn sở hữu cạnh viền vát phẳng và hệ thống camera được bố trí một cách hợp lý trong một cụm hình vuông. Giờ đây cụm tai thỏ quen thuộc đã được loại bỏ và thay thế vào đó là hình notch độc đáo dễ nhận diện.",
-      image: "https://res.cloudinary.com/de5pwc5fq/image/upload/v1666019236/-9256-1665132615_oui8nx.jpg",
+      image: "https://res.cloudinary.com/de5pwc5fq/image/upload/v1666976520/Ecommerce/e3b9ff9622ed61e1ee11bf2297bcc2d8_ps3mqa.webp",
       unitInStock: 100,
       createdAt: "2022-09-16 18:59:59",
       updatedAt: "2022-09-16 19:59:59",
@@ -315,7 +315,7 @@ const data = {
       price: 110000,
       description:
         "Trí tuệ Do Thái là một cuốn sách tư duy đầy tham vọng trong việc nâng cao khả năng tự học tập, ghi nhớ và phân tích - những điều đã khiến người Do Thái vượt trội lên, chiếm lĩnh những vị trí quan trọng trong ngành truyền thông, ngân hàng và những giải thưởng sáng tạo trên thế giới.",
-      image: "",
+      image: "https://res.cloudinary.com/de5pwc5fq/image/upload/v1666976562/Ecommerce/a4d62cfcbd3cdd26c1ec72e03f780816_r2a1f6.webp",
       unitInStock: 100,
       createdAt: "2022-09-16 18:59:59",
       updatedAt: "2022-09-16 19:59:59",
@@ -330,7 +330,7 @@ const data = {
       price: 100000,
       description:
         "Cuốn sách sẽ giúp bạn trở nên giàu có, làm giàu cho cuộc sống của bạn trên tất cả các phương diện của cuộc sống chứ không chỉ về tài chính và vật chất.Think and grow rich – 13 nguyên tắc nghĩ giàu, làm giàu là cuốn sách “chỉ dẫn” duy nhất chỉ ra những nguồn lực bạn phải có để thành công. Mỗi chương trong cuốn sách đều đề cập đến bí quyết kiếm tiền, từ việc có niềm tin, có mong muốn đến những kiến thức chuyên sâu, những ý tưởng, những kế hoạch, những cách đưa ra quyết định.",
-      image: "",
+      image: "https://res.cloudinary.com/de5pwc5fq/image/upload/v1666976274/Ecommerce/01ce6f8396894e14476f7ccbf27a5f51_pr70rc.webp",
       unitInStock: 100,
       createdAt: "2022-09-16 18:59:59",
       updatedAt: "2022-09-16 19:59:59",
@@ -345,7 +345,7 @@ const data = {
       price: 5000000,
       description:
         "Được thiết kế bởi Dylan Raasch - Giám đốc Sáng tạo cấp cao của dòng sản phẩm Air Max, Nike Air Max 270 được coi là một phiên bản giày thể thao thoải mái nhất từ trước đến nay của thương hiệu với phần đệm Air dày đến 32 millimet và phần gót lấy cảm hứng từ mẫu giày Nike Air Max 93.",
-      image: "",
+      image: "https://res.cloudinary.com/de5pwc5fq/image/upload/v1666976328/Ecommerce/nike-air-max-270-volt-dc0957-100-1_2dd17c12892947f58c4255fb9b677796_1024x1024_jjqne7.webp",
       unitInStock: 100,
       createdAt: "2022-09-16 18:59:59",
       updatedAt: "2022-09-16 19:59:59",
@@ -360,7 +360,7 @@ const data = {
       price: 83000000,
       description:
         "Thật ấn tượng với Apple MacBook Pro 16 M1 Max 2021 mang trên mình 'bộ áo mới' độc đáo, cuốn hút mọi ánh nhìn cùng màn hình tai thỏ lần đầu tiên xuất hiện ở dòng Mac và ẩn bên trong là bộ cấu hình mạnh mẽ tuyệt vời đến từ con chip M1 Max tân tiến.",
-      image: "",
+      image: "https://res.cloudinary.com/de5pwc5fq/image/upload/v1666976458/Ecommerce/14864d6c4a480ec6ea94cd8d299a62b0_jsdh5b.webp",
       unitInStock: 100,
       createdAt: "2022-09-16 18:59:59",
       updatedAt: "2022-09-16 19:59:59",
@@ -528,38 +528,38 @@ const data = {
     },
   ],
 
-  order: [
-    {
-      id: 1,
-      shipAddress: "Mỹ Đức - Tây An - Tây Sơn - Bình Định",
-      payment: "Thanh toán online",
-      createdAt: "2022-09-16 18:59:59",
-      updatedAt: "2022-09-16 19:59:59",
-      customerId: 2,
-      isConfirm: true,
-      shipperId: 1,
-      shopId: 1,
-    },
-  ],
+  // order: [
+  //   {
+  //     id: 1,
+  //     shipAddress: "Mỹ Đức - Tây An - Tây Sơn - Bình Định",
+  //     payment: "Thanh toán online",
+  //     createdAt: "2022-09-16 18:59:59",
+  //     updatedAt: "2022-09-16 19:59:59",
+  //     customerId: 2,
+  //     isConfirm: true,
+  //     shipperId: 1,
+  //     shopId: 1,
+  //   },
+  // ],
 
-  orderDetails: [
-    {
-      id: 1,
-      quantity: 2,
-      unitPrice: 170000,
-      discount: 0.1,
-      productId: 2,
-      orderId: 1,
-    },
-    {
-      id: 2,
-      quantity: 1,
-      unitPrice: 37000000,
-      discount: 0.1,
-      productId: 1,
-      orderId: 1,
-    },
-  ],
+  // orderDetails: [
+  //   {
+  //     id: 1,
+  //     quantity: 2,
+  //     unitPrice: 170000,
+  //     discount: 0.1,
+  //     productId: 2,
+  //     orderId: 1,
+  //   },
+  //   {
+  //     id: 2,
+  //     quantity: 1,
+  //     unitPrice: 37000000,
+  //     discount: 0.1,
+  //     productId: 1,
+  //     orderId: 1,
+  //   },
+  // ],
 
   review: [
     {
