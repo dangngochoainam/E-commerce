@@ -13,4 +13,5 @@ export let endpoints = {
   statsShop: "/statsShop/",
   admin: "/admin/",
   notifications: "/notifications/",
+  checkout: '/checkout/'
 };

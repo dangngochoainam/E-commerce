@@ -11,6 +11,7 @@ import {
 import { toast } from 'react-toastify';
 import { countProduct } from '../../lib/redux/cartSlide';
 import { buy } from '../../utils/apiOrder';
+import Stripe from '../../components/Stripe';
 
 const Cart = () => {
   const dispatch = useDispatch();
@@ -67,10 +68,14 @@ const Cart = () => {
   };
 
   const handlePurchase = async (address, payment, shopId, cart) => {
+    const temp = Object.values(
+      JSON.parse(localStorage.getItem(currentUser.id))
+    )[0]?.shopId;
+
     const order = {
       shipAddress: address,
       payment: payment,
-      shopId: 4,
+      shopId: temp,
     };
 
     const orderDetails = Object.values(cart).reduce((acc, item) => {
@@ -107,6 +112,10 @@ const Cart = () => {
       console.log(error);
       toast.error(error.response.data.data.error, { theme: 'colored' });
     }
+  };
+
+  const handleCheckOut = async () => {
+    handlePurchase(currentUser.address, 'Thanh toán bằng tiền mặt', null, cart);
   };
 
   useEffect(() => {
@@ -234,7 +243,7 @@ const Cart = () => {
                       );
                     })}
 
-                    {/*  
+                    {/*
                     <div className="flex items-center hover:bg-gray-100 -mx-8 px-6 py-5">
                       <div className="flex w-2/5">
                         <div className="w-20">
@@ -364,13 +373,18 @@ const Cart = () => {
                         handlePurchase(
                           currentUser.address,
                           'Thanh toán bằng tiền mặt',
-                          4,
+                          null,
                           cart
                         )
                       }
                     >
                       Thanh toán
                     </button>
+                    <Stripe
+                      handleCheckOut={handleCheckOut}
+                      currentUser={currentUser}
+                      amount={Math.round(countTotalPriceInCart(cart) / 24832)}
+                    />
                   </div>
                 </div>
               </div>

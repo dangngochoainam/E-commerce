@@ -1,5 +1,4 @@
-
-import {io} from 'socket.io-client'
+import { io } from 'socket.io-client';
 
 export const formatMoney = (price) =>
   String(price.toString().replace(/(.)(?=(\d{3})+$)/g, '$1,'));
@@ -23,4 +22,6 @@ export const randomColor = () => {
   return `rgb(${r}, ${g}, ${b})`;
 };
 
-export const socket = io('http://localhost:8080')
+
+
+export const socket = io('http://localhost:8080');
