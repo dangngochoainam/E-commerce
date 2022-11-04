@@ -196,7 +196,7 @@ const ListProduct = () => {
           nextLabel={"Sau"}
           breakLabel={"..."}
           pageCount={
-            products.productAmount ? Math.ceil(products.productAmount / 2) : 0
+            products.productAmount ? Math.ceil(products.productAmount / 5) : 0
           }
           marginPagesDisplayed={2}
           pageRangeDisplayed={3}

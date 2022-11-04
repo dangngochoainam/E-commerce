@@ -115,23 +115,23 @@ const Header = () => {
                           <ul className="sub__nav">
                             <li className="sub__item">
                               <Link to={`/account/${currentUser.id}`}>
-                                Trang cá nhân
+                               🦸‍♂️ Trang cá nhân
                               </Link>
                             </li>
                             {currentUser.roles === 'STAFF' ? (
                               <li className="sub__item">
-                                <Link to="/staff">Trang quản lý</Link>
+                                <Link to="/staff">🏠 Trang quản lý</Link>
                               </li>
                             ) : null}
 
                             {currentUser.roles === 'ADMIN' ? (
                               <li className="sub__item">
-                                <Link to="/admin">Trang quản trị</Link>
+                                <Link to="/admin">🏠 Trang quản trị</Link>
                               </li>
                             ) : null}
-                            <li className="sub__item">Đơn hàng của bạn</li>
+                            <li className="sub__item">📗 Đơn hàng của bạn</li>
                             <li className="sub__item" onClick={handleLogOut}>
-                              Thoát tài khoản
+                              ➡ Thoát tài khoản
                             </li>
                           </ul>
                         </span>

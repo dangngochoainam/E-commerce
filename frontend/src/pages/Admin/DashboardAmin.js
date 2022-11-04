@@ -1,6 +1,86 @@
-import React from 'react';
+import React, { useState } from 'react';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import { Bar } from 'react-chartjs-2';
+
+import { PointElement, LineElement } from 'chart.js';
+import { Line } from 'react-chartjs-2';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
+const options = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: 'top',
+    },
+    title: {
+      display: true,
+      // text: 'Chart.js Bar Chart',
+    },
+  },
+};
+
+//line chart
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 const DashboardAdmin = () => {
+  const [data, setData] = useState({
+    labels: ['Mai Phương', 'Nhà sách hay', 'Nike, Adidas chính hãng'],
+    datasets: [
+      {
+        label: 'Thống kê doanh thu theo cửa hàng',
+        data: ['249000000', '100000000', '166000000'],
+        backgroundColor: [
+          'rgb(151, 165, 234)',
+
+          'rgb(46, 241, 229)',
+
+          'rgb(36, 181, 105)',
+        ],
+      },
+    ],
+  });
+
+  const [data2, setData2] = useState({
+    labels: ['Trí Tuệ Do Thái', 'Think And Grow Rich', 'iPhone 14 Pro'],
+    datasets: [
+      {
+        label: 'Thống kê doanh thu sản phẩm',
+        data: ['145000000', '175000000', '350000000'],
+        backgroundColor: [
+          'rgb(121, 105, 214)',
+
+          'rgb(26, 41, 29)',
+
+          'rgb(136, 111, 195)',
+        ],
+      },
+    ],
+  });
   return (
     <>
       <div className="w-full px-4 md:px-0 md:mt-8 mb-16 text-gray-800 leading-normal">
@@ -18,7 +98,7 @@ const DashboardAdmin = () => {
                     Tổng doanh thu
                   </h5>
                   <h3 className="font-bold text-3xl">
-                    $3249{' '}
+                    249,387,00 VNĐ{' '}
                     <span className="text-green-500">
                       <i className="fas fa-caret-up"></i>
                     </span>
@@ -40,7 +120,7 @@ const DashboardAdmin = () => {
                     Số lượng sản phẩm
                   </h5>
                   <h3 className="font-bold text-3xl">
-                    249{' '}
+                    32{' '}
                     <span className="text-pink-500">
                       <i className="fas fa-exchange-alt"></i>
                     </span>
@@ -62,7 +142,7 @@ const DashboardAdmin = () => {
                     Số lượng người dùng
                   </h5>
                   <h3 className="font-bold text-3xl">
-                    2{' '}
+                    65{' '}
                     <span className="text-yellow-600">
                       <i className="fas fa-caret-up"></i>
                     </span>
@@ -83,7 +163,7 @@ const DashboardAdmin = () => {
                   <h5 className="font-bold uppercase text-gray-500">
                     Số lượng cửa hàng
                   </h5>
-                  <h3 className="font-bold text-3xl">152 days</h3>
+                  <h3 className="font-bold text-3xl">23</h3>
                 </div>
               </div>
             </div>
@@ -100,7 +180,7 @@ const DashboardAdmin = () => {
                   <h5 className="font-bold uppercase text-gray-500">
                     Số người đăng ký bán hàng
                   </h5>
-                  <h3 className="font-bold text-3xl">7 tasks</h3>
+                  <h3 className="font-bold text-3xl">13</h3>
                 </div>
               </div>
             </div>
@@ -118,7 +198,7 @@ const DashboardAdmin = () => {
                     Số lượng người bán hàng
                   </h5>
                   <h3 className="font-bold text-3xl">
-                    3{' '}
+                    20{' '}
                     <span className="text-red-500">
                       <i className="fas fa-caret-up"></i>
                     </span>
@@ -140,46 +220,10 @@ const DashboardAdmin = () => {
               <div className="p-5">
                 <div className="chartjs-size-monitor">
                   <div className="chartjs-size-monitor-expand">
-                    <div></div>
+                    <Bar options={options} data={data} height={200} />
                   </div>
                   <div className="chartjs-size-monitor-shrink"></div>
                 </div>
-                {/* <canvas
-                      id="chartjs-7"
-                      className="chartjs chartjs-render-monitor"
-                      width="710"
-                      height="355"
-                      style="display: block; height: 284px; width: 568px;"
-                    ></canvas> */}
-                {/* <script>
-                    new Chart(document.getElementById("chartjs-7"), {
-                        "type": "bar",
-                        "data": {
-                            "labels": ["January", "February", "March", "April"],
-                            "datasets": [{
-                                "label": "Page Impressions",
-                                "data": [10, 20, 30, 40],
-                                "borderColor": "rgb(255, 99, 132)",
-                                "backgroundColor": "rgba(255, 99, 132, 0.2)"
-                            }, {
-                                "label": "Adsense Clicks",
-                                "data": [5, 15, 10, 30],
-                                "type": "line",
-                                "fill": false,
-                                "borderColor": "rgb(54, 162, 235)"
-                            }]
-                        },
-                        "options": {
-                            "scales": {
-                                "yAxes": [{
-                                    "ticks": {
-                                        "beginAtZero": true
-                                    }
-                                }]
-                            }
-                        }
-                    });
-                </script> */}
               </div>
             </div>
           </div>
@@ -191,7 +235,11 @@ const DashboardAdmin = () => {
               </div>
               <div className="p-5">
                 <div className="chartjs-size-monitor">
-                  <div className="chartjs-size-monitor-expand"></div>
+                  <div className="chartjs-size-monitor-expand">
+                    <div>
+                      <Line options={options} data={data2}  height={200}/>
+                    </div>
+                  </div>
                   <div className="chartjs-size-monitor-shrink"></div>
                 </div>
                 {/* <canvas

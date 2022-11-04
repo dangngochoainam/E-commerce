@@ -22,7 +22,7 @@ function Navbar() {
     setNextScroll(!nextScroll);
   };
   return (
-    <nav className="px-5 h-12 flex items-center bg-white">
+    <nav className="px-5 h-12 flex items-center bg-white border-b-8 border-solid border-gray-200">
       {nextScroll && (
         <span
           className="font-bold text-xl cursor-pointer"

@@ -8,7 +8,7 @@ const Admin = () => {
   const currentUser = useSelector((state) => state.auth.currentUser);
 
   useEffect(() => {
-    if (currentUser.roles !== 'ADMIN') {
+    if (currentUser?.roles !== 'ADMIN') {
       navigate('/');
     }
   }, [currentUser]);

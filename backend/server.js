@@ -24,6 +24,7 @@ const io = new Server(server, {
 });
 let onlineUsers = [];
 
+
 const addNewUser = (username, socketId) => {
   !onlineUsers.some((user) => user.username === username) &&
     onlineUsers.push({ username, socketId });
